@@ -1,31 +1,23 @@
-// src/App.tsx
+import { Routes, Route, Link } from 'react-router-dom'
+import MyPage from './pages/Mypage/Mypage.tsx'
 
-import { Routes, Route, Link } from 'react-router-dom';
+const MainPage = () => <div>메인 페이지</div>
+const LoginPage = () => <div>로그인/회원가입 페이지</div>
 
-// 라우팅 테스트를 위한 임시 페이지 컴포넌트들
-const MainPage = () => <div>메인 페이지</div>;
-const LoginPage = () => <div>로그인/회원가입 페이지</div>;
-const MyPage = () => <div>마이 페이지</div>;
-
-function App() {
+export default function App() {
     return (
-        <div>
-            {/* 예시 네비게이션 */}
-            <nav style={{ marginBottom: '20px' }}>
-                <Link to="/">메인</Link> |{' '}
-                <Link to="/login">로그인</Link> |{' '}
+        <div className="max-w-5xl mx-auto py-6">
+            <nav className="mb-6 flex gap-4">
+                <Link to="/">메인</Link>
+                <Link to="/login">로그인</Link>
                 <Link to="/mypage">마이페이지</Link>
             </nav>
 
-            {/* 👇 페이지 경로(URL)에 따라 보여줄 컴포넌트를 정의하는 부분 */}
             <Routes>
                 <Route path="/" element={<MainPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/mypage" element={<MyPage />} />
-                {/* 여기에 다른 페이지 라우트들을 추가합니다. */}
             </Routes>
         </div>
-    );
+    )
 }
-
-export default App;
