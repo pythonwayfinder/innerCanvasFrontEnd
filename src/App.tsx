@@ -1,35 +1,31 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// src/App.tsx
+
+import { Routes, Route, Link } from 'react-router-dom';
+
+// 라우팅 테스트를 위한 임시 페이지 컴포넌트들
+const MainPage = () => <div>메인 페이지</div>;
+const LoginPage = () => <div>로그인/회원가입 페이지</div>;
+const MyPage = () => <div>마이 페이지</div>;
 
 function App() {
-  const [count, setCount] = useState(0)
+    return (
+        <div>
+            {/* 예시 네비게이션 */}
+            <nav style={{ marginBottom: '20px' }}>
+                <Link to="/">메인</Link> |{' '}
+                <Link to="/login">로그인</Link> |{' '}
+                <Link to="/mypage">마이페이지</Link>
+            </nav>
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+            {/* 👇 페이지 경로(URL)에 따라 보여줄 컴포넌트를 정의하는 부분 */}
+            <Routes>
+                <Route path="/" element={<MainPage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/mypage" element={<MyPage />} />
+                {/* 여기에 다른 페이지 라우트들을 추가합니다. */}
+            </Routes>
+        </div>
+    );
 }
 
-export default App
+export default App;
