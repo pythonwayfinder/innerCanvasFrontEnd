@@ -7,6 +7,7 @@ import { BrowserRouter } from 'react-router-dom'; // react-router-dom에서 Brow
 import App from './App.tsx';
 import { AppProviders } from './AppProviders.tsx';
 import ErrorBoundary from './ErrorBoundary.tsx';
+import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
