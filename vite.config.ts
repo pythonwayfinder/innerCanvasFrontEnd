@@ -1,23 +1,28 @@
 // vite.config.ts
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite';
+import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
     // 프론트(기본 5173) → 백엔드(8080) 프록시
     proxy: {
-      // ① 프론트에서 '/api/...' 로 호출하면
+      // 1. '/api'로 시작하는 모든 API 요청을 백엔드로 전달
       '/api': {
-        target: 'http://localhost:8080', // 백엔드 주소
+        target: 'http://localhost:8080',
         changeOrigin: true,
-        secure: false,
-        // ② 백엔드가 '/api' 없이 라우팅한다면 주석 해제
-        // rewrite: (path) => path.replace(/^\/api/, ''),
-        // 웹소켓도 쓰면 주석 해제
-        // ws: true,
       },
+      // 2. '/oauth2'로 시작하는 소셜 로그인 요청을 백엔드로 전달
+      '/oauth2': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+      },
+      // 3. Spring Security의 기타 로그인 관련 경로를 백엔드로 전달
+      '/login': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+      }
     },
   },
 })
