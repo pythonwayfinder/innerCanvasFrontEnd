@@ -1,8 +1,8 @@
 import { Routes, Route, Link } from 'react-router-dom'
-import MyPage from './pages/Mypage/Mypage.tsx'
+import MyPage from './pages/Mypage.tsx'
 
-import Diary from './pages/Diary/Diary';
-import DiaryEditor from './pages/Diary/DiaryEditor';
+import Diary from './pages/DiaryPage.tsx';
+import DiaryEditor from './components/Diary/DiaryEditor.tsx';
 
 const MainPage = () => <div>메인 페이지</div>
 const LoginPage = () => <div>로그인/회원가입 페이지</div>

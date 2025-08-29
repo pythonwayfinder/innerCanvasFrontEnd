@@ -1,6 +1,6 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import axiosInstance from "../../api/axiosInterceptor";
 
 interface Diary {
     diaryId: number;
@@ -22,7 +22,7 @@ function DiaryViewer() {
     useEffect(() => {
         localStorage.setItem("selectedDate", diaryDate);
 
-        axios
+        axiosInstance
             .get<Diary>("http://localhost:8080/api/diary", {
                 params: { userId: 1, date: diaryDate }, // userId 예시
             })

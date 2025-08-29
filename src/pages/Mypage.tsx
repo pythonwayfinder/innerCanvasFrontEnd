@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAppDispatch, useAppSelector } from '../../hooks'
-import { logout, updateProfile } from '../../slices/authSlice'
+import { useAppDispatch, useAppSelector } from '../hooks'
+import { logout, updateProfile } from '../slices/authSlice'
 
 export default function MyPage() {
     const navigate = useNavigate()

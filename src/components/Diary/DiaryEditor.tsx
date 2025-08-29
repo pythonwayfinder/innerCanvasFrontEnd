@@ -1,6 +1,7 @@
-import axios from "axios";
 import { useRef, useState } from "react";
-import { ReactSketchCanvas, type ReactSketchCanvasRef } from "react-sketch-canvas";
+import { type ReactSketchCanvasRef } from "react-sketch-canvas";
+import axiosInstance from "../../api/axiosInterceptor";
+import DoodleCanvas from "./DoodleCanvas";
 
 interface DiaryInput {
     userId: number;
@@ -18,47 +19,43 @@ function DiaryEditor() {
 
     const canvasRef = useRef<ReactSketchCanvasRef>(null);
 
-    // 그림 저장 → 서버 업로드 → doodleId 세팅
-    const handleSaveDrawing = async () => {
-        try {
-            const dataUrl = await canvasRef.current?.exportImage("png"); // Promise<string>
-            if (!dataUrl) {
-                setMessage("❌ 그림 데이터가 없습니다.");
-                return;
-            }
-            const blob = await (await fetch(dataUrl)).blob();
-            const formData = new FormData();
-            formData.append("file", blob, "doodle.png");
-            formData.append("userId", "1"); // 로그인 사용자 ID (예시)
-
-            const res = await axios.post("http://localhost:8080/api/doodles", formData, {
-                headers: { "Content-Type": "multipart/form-data" },
-            });
-            setDoodleId(res.data.doodleId);
-            setMessage("🖼️ 그림 저장 완료!");
-        } catch (err) {
-            console.error(err);
-            setMessage("❌ 그림 저장 실패");
-        }
-    };
-
     const handleSubmit = async () => {
         setLoading(true);
         setMessage("");
 
-        const payload: DiaryInput = {
-            userId: 1, // 예시: 로그인 유저 ID
-            diaryText,
-            moodColor: moodColor || null,
-            doodleId: doodleId || null,
-        };
-
         try {
-            const res = await axios.post("http://localhost:8080/api/diary", payload);
+            let savedDoodleId = doodleId;
+
+            // 그림 저장 (그림이 있으면)
+            const dataUrl = await canvasRef.current?.exportImage("png");
+            if (dataUrl) {
+                const blob = await (await fetch(dataUrl)).blob();
+                const formData = new FormData();
+                formData.append("file", blob, "doodle.png");
+                formData.append("userId", "1");
+
+                const res = await axiosInstance.post("http://localhost:8080/api/doodles", formData, {
+                    headers: { "Content-Type": "multipart/form-data" },
+                });
+                savedDoodleId = res.data.doodleId;
+            }
+
+            // 글 저장
+            const payload: DiaryInput = {
+                userId: 1,
+                diaryText,
+                moodColor: moodColor || null,
+                doodleId: savedDoodleId || null,
+            };
+
+            await axiosInstance.post("http://localhost:8080/api/diary", payload);
+
+            // 상태 초기화
             setMessage("✅ 일기 작성 완료!");
             setDiaryText("");
             setMoodColor("");
             setDoodleId(undefined);
+            canvasRef.current?.clearCanvas();
         } catch (err) {
             console.error(err);
             setMessage("❌ 일기 작성 실패");
@@ -90,6 +87,8 @@ function DiaryEditor() {
                     onChange={(e) => setMoodColor(e.target.value)}
                 />
             </div>
+
+            <DoodleCanvas ref={canvasRef} doodleId={doodleId} />
 
             <button
                 className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:opacity-50"
