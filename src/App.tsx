@@ -7,7 +7,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
 import type {AppDispatch, RootState} from "./store/store.ts";
 import axiosInstance from "./api/axiosInstance.ts";
-import Header from "./components/Header.tsx"; // ✨ 수정한 액션 import
+import Header from "./components/Header.tsx";
+import OAuthCallback from "./pages/OAuthCallback.tsx"; // ✨ 수정한 액션 import
 
 // 임시 컴포넌트들 (실제 페이지로 교체될 예정)
 const MyPageContent = () => <div className="p-8"><h2>마이 페이지 내용</h2><p>여기는 로그인한 사용자만 볼 수 있는 마이 페이지입니다.</p></div>;
@@ -55,6 +56,9 @@ function App() {
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/signup" element={<SignupPage />} /> {/* 회원가입 페이지 추가 */}
+                <Route path="/signup/oauth" element={<SignupPage />} /> {/* 👈 OAuth 전용 경로 추가 */}
+                <Route path="/oauth/callback" element={<OAuthCallback />} /> {/* 👈 콜백 경로 추가 */}
+
 
                 {/* 비공개 라우트 (로그인 필요) */}
                 <Route element={<PrivateRoutes />}>
