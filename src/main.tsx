@@ -4,6 +4,8 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux'; // 👈 react-redux에서 Provider를 가져옵니다.
 
+import './index.css';  // Tailwind 스타일을 불러옵니다.
+
 import App from './App.tsx';
 import { AppProviders } from './AppProviders.tsx';
 import ErrorBoundary from './ErrorBoundary.tsx';
