@@ -28,6 +28,7 @@ const Header = () => {
         </span>
                 <img src={logo} alt="Inner Canvas Logo" className="h-10 w-10 ml-1 mb-2" />
             </Link>
+
             <nav>
                 {isAuthenticated ? (
                     <div className="flex items-center space-x-4 text-slate-700 font-bold">
