@@ -28,7 +28,18 @@ const Header = () => {
         </span>
                 <img src={logo} alt="Inner Canvas Logo" className="h-10 w-10 ml-1 mb-2" />
             </Link>
-
+            {/* 가운데 달력 메뉴 (고정) */}
+            <div
+                className="absolute z-20"
+                style={{ left: 'calc(50% + 80px)', top: 'calc(50% - 480px)', transform: 'translate(-50%, -50%)' }}
+            >
+                <Link
+                    to="/calendar"
+                    className="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600 transition-colors"
+                >
+                    달력
+                </Link>
+            </div>
             <nav>
                 {isAuthenticated ? (
                     <div className="flex items-center space-x-4 text-slate-700 font-bold">
@@ -53,6 +64,7 @@ const Header = () => {
                         <Link to="/signup" className="px-4 py-2 bg-[#7286D3] text-white rounded-md hover:bg-[#5B6CA8] transition-colors">
                             회원가입
                         </Link>
+
                     </div>
                 )}
             </nav>
