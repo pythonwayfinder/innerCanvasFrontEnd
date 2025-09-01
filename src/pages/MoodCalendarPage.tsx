@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import CalendarHeader from '../components/calendar/CalendarHeader.tsx';
 import CalendarGrid from '../components/calendar/CalendarGrid.tsx';
 import MoodLegend from '../components/calendar/MoodLegend.tsx';
 import { useMoodData } from '../hooks/useMoodData.ts';
 
-const MoodCalendarPage: React.FC = () => {
+export default function MoodCalendarPage() {
     const [currentDate, setCurrentDate] = useState(new Date());
 
     const year = currentDate.getFullYear();
@@ -43,6 +43,4 @@ const MoodCalendarPage: React.FC = () => {
             <MoodLegend />
         </div>
     );
-};
-
-export default MoodCalendarPage;
+}
