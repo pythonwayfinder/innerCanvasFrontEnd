@@ -1,16 +1,24 @@
 import { useState } from 'react';
-import CalendarHeader from '../components/calendar/CalendarHeader.tsx';
-import CalendarGrid from '../components/calendar/CalendarGrid.tsx';
-import MoodLegend from '../components/calendar/MoodLegend.tsx';
-import { useMoodData } from '../hooks/useMoodData.ts';
+import CalendarHeader from '../components/calendar/CalendarHeader';
+import CalendarGrid from '../components/calendar/CalendarGrid';
+import MoodLegend from '../components/calendar/MoodLegend';
+import { useMoodData } from '../hooks/useMoodData';
+import { useSelector } from 'react-redux';
+import type { RootState } from '../store/store';
+import { useNavigate } from 'react-router-dom';
 
 export default function MoodCalendarPage() {
     const [currentDate, setCurrentDate] = useState(new Date());
+    const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+    const navigate = useNavigate();
 
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth() + 1;
 
-    const { moodData, loading, error } = useMoodData(year, month);
+    // 로그인한 경우에만 감정 데이터 불러오기
+    const { moodData, loading, error } = isAuthenticated
+        ? useMoodData(year, month)
+        : { moodData: {}, loading: false, error: null };
 
     const handlePrevMonth = () => {
         setCurrentDate(prev => new Date(prev.getFullYear(), prev.getMonth() - 1, 1));
@@ -21,7 +29,11 @@ export default function MoodCalendarPage() {
     };
 
     const handleDateClick = (date: Date) => {
-        alert(`선택한 날짜: ${date.toDateString()}`);
+        if (isAuthenticated) {
+            alert(`선택한 날짜: ${date.toDateString()}`);
+        } else {
+            navigate('/login');
+        }
     };
 
     return (
