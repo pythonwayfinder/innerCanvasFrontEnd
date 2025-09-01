@@ -16,7 +16,8 @@ const Header = () => {
             await axiosInstance.post('/auth/logout');
             dispatch(logout());
             navigate('/login', {replace: true});
-        } catch {
+        } catch(err) {
+            console.log(err)
         }
     };
 
@@ -30,12 +31,12 @@ const Header = () => {
             </Link>
             {/* 가운데 섹션: 주 메뉴 (달력, 일기장) */}
             <div className="flex-1 flex justify-center items-center space-x-6 text-slate-700 font-bold">
-                <Link
-                    to="/calendar"
-                    className="inline-block px-4 py-2 rounded-md w-21 text-center border border-[#A6B1E1] hover:bg-[#D4DAF7] hover:text-[#5B6CA8] transition-colors"
-                >
-                    달력
-                </Link>
+                {/*<Link*/}
+                {/*    to="/calendar"*/}
+                {/*    className="inline-block px-4 py-2 rounded-md w-21 text-center border border-[#A6B1E1] hover:bg-[#D4DAF7] hover:text-[#5B6CA8] transition-colors"*/}
+                {/*>*/}
+                {/*    달력*/}
+                {/*</Link>*/}
                 <Link
                     to="/diary"
                     className="inline-block px-4 py-2 rounded-md w-21 text-center border border-[#A6B1E1] hover:bg-[#D4DAF7] hover:text-[#5B6CA8] transition-colors"
