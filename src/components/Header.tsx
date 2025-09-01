@@ -28,17 +28,20 @@ const Header = () => {
         </span>
                 <img src={logo} alt="Inner Canvas Logo" className="h-10 w-10 ml-1 mb-2" />
             </Link>
-            {/* 가운데 달력 메뉴 (고정) */}
-            <div
-                className="absolute z-20"
-                style={{ left: 'calc(50% + 80px)', top: 'calc(50% - 480px)', transform: 'translate(-50%, -50%)' }}
-            >
+            {/* 가운데 섹션: 주 메뉴 (달력, 일기장) */}
+            <div className="flex-1 flex justify-center items-center space-x-6 text-slate-700 font-bold">
                 <Link
                     to="/calendar"
-                    className="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600 transition-colors"
+                    className="px-3 py-2 rounded-md hover:bg-[#D4DAF7] hover:text-[#5B6CA8] transition-colors"
                 >
                     달력
                 </Link>
+                {/* 일기장 메뉴는 로그인 시에만 중앙에 보이도록 처리 */}
+                {isAuthenticated && (
+                    <Link to="/diary" className="px-3 py-2 rounded-md hover:bg-[#D4DAF7] hover:text-[#5B6CA8] transition-colors">
+                        일기장
+                    </Link>
+                )}
             </div>
             <nav>
                 {isAuthenticated ? (

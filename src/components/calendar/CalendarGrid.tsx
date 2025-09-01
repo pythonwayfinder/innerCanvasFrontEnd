@@ -1,5 +1,5 @@
 import React from 'react';
-import CalendarDay from './CalendarDay';
+import CalendarDay from './CalendarDay.tsx';
 
 interface Props {
     date: Date;

@@ -1,4 +1,4 @@
-import DiaryViewer from "../components/Diary/DiaryViewer";
+import DiaryViewer from "../components/diary/DiaryViewer";
 
 
 function Diary() {
