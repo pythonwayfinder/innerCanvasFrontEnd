@@ -62,13 +62,13 @@ function App() {
                 <Route path="/signup" element={<SignupPage />} /> {/* 회원가입 페이지 추가 */}
                 <Route path="/signup/oauth" element={<SignupPage />} /> {/* 👈 OAuth 전용 경로 추가 */}
                 <Route path="/oauth/callback" element={<OAuthCallback />} /> {/* 👈 콜백 경로 추가 */}
+                <Route path="/calendar" element={<MoodCalendarPage />} />
+                <Route path="/diary" element={<DiaryPage />} />
 
                 {/* 비공개 라우트 (로그인 필요) */}
                 <Route element={<PrivateRoutes />}>
                     <Route path="/mypage" element={<MyPage />} /> {/* MyPage는 PrivateRoutes 안에 있어야 함 */}
                     <Route path="/dashboard" element={<MyPageContent />} /> {/* 예시로 추가 */}
-                    <Route path="/diary" element={<DiaryPage />} />
-                    <Route path="/calendar" element={<MoodCalendarPage />} />
                 </Route>
 
                 {/* 존재하지 않는 경로 처리 */}

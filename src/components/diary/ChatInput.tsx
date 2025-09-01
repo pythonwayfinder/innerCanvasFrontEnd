@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axiosInstance from "../../api/axiosInterceptor";
+import axiosInstance from "../../api/axiosInstance.ts";
 
 interface ChatInputProps {
     diaryId: number;

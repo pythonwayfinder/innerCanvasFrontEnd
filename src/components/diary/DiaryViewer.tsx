@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axiosInstance from "../../api/axiosInterceptor";
+import axiosInstance from "../../api/axiosInstance.ts";
 
 interface Diary {
     diaryId: number;

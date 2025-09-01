@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { type ReactSketchCanvasRef } from "react-sketch-canvas";
-import axiosInstance from "../../api/axiosInterceptor";
+import axiosInstance from "../../api/axiosInstance.ts";
 import DoodleCanvas from "./DoodleCanvas";
 
 interface DiaryInput {

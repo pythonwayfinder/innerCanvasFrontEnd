@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import MessageBubble from "./MessageBubble";
-import axiosInstance from "../../api/axiosInterceptor";
+import axiosInstance from "../../api/axiosInstance.ts";
 
 interface ChatMessage {
     logId: number;
