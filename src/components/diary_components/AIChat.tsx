@@ -2,11 +2,12 @@ import { useState } from "react";
 import MessageList from "./MessageList";
 import ChatInput from "./ChatInput";
 
-interface AIChatProps {
+interface MessageListProps {
     diaryId: number;
+    type: number;
 }
 
-const AIChat: React.FC<AIChatProps> = ({ diaryId }) => {
+const AIChat: React.FC<MessageListProps> = ({ diaryId, type }) => {
     const [updateTrigger, setUpdateTrigger] = useState(0);
 
     const refreshMessages = () => {
@@ -16,7 +17,7 @@ const AIChat: React.FC<AIChatProps> = ({ diaryId }) => {
     return (
         <div className="w-full max-w-3xl mx-auto p-4 border rounded shadow bg-white">
             <h2 className="text-2xl font-bold mb-4">💬 AI 상담</h2>
-            <MessageList key={updateTrigger} diaryId={diaryId} />
+            <MessageList type={type} diaryId={diaryId} />
             <ChatInput diaryId={diaryId} onMessageSent={refreshMessages} />
         </div>
     );

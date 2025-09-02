@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axiosInstance from "../../api/axiosInstance";
 
 import DiaryEditor from "./DiaryEditor.tsx";
@@ -10,41 +10,49 @@ interface Diary {
     doodleId?: number | null;
     diaryText: string;
     moodColor?: string | null;
-    createdAt: string;
+    createdAt: string | "";
 }
 
 interface DiaryViewerProps {
-    today: string;
+    diaryData: Diary | null;
+    type: number;
 }
 
-const DiaryViewer: React.FC<DiaryViewerProps> = ({ today }) => {
-    const { date: paramDate } = useParams<{ date: string }>();
-    const [diary, setDiary] = useState<Diary | null>(null);
-    const [loading, setLoading] = useState(true);
+const DiaryViewer: React.FC<DiaryViewerProps> = ({ diaryData, type }) => {
+    const [diary, setDiary] = useState<Diary | null>(diaryData);
     const [showEditor, setShowEditor] = useState(false);
-
-    // const today = new Date().toISOString().split("T")[0];
-    const diaryDate = paramDate || localStorage.getItem("selectedDate") || today;
+    const navigate = useNavigate();
+    const today = new Date().toISOString().split("T")[0];
 
     useEffect(() => {
-        localStorage.setItem("selectedDate", diaryDate);
+        if (type == 2) {
+            setDiary(diaryData);
+        }
+        else {
+            const default_data: Diary = {
+                diaryId: -1,
+                userId: -1,
+                doodleId: -1,
+                diaryText: "no diary data",
+                moodColor: "없음",
+                createdAt: today            
+            };
 
-        axiosInstance
-            .get<Diary>("http://localhost:8080/api/diary", {
-                params: { userId: 1, date: diaryDate }, // userId 예시
-            })
-            .then((res) => setDiary(res.data))
-            .catch(() => setDiary(null))
-            .finally(() => setLoading(false));
-    }, [diaryDate]);
-
-    if (loading) return <p className="text-center text-gray-500">⏳ 불러오는 중...</p>;
+            setDiary(default_data);
+        }
+    }, [diaryData, type])
 
     return (
         <div className="p-6 border border-gray-300 rounded-2xl shadow bg-white w-full h-full max-w-3xl mx-auto">
             {/* 제목 및 날짜 */}
             <h2 className="text-2xl font-bold mb-1 text-gray-800">📖 일기</h2>
-            <p className="text-sm text-gray-500 mb-2">날짜: {diaryDate}</p>
+            <p className="text-sm text-gray-500 mb-2">날짜: {diary?.createdAt}
+                <button
+                    className="ml-2 px-1 py-1 bg-green-500 text-white rounded-lg shadow hover:bg-green-600"
+                    onClick={() => navigate('/calendar')}>
+                    달력으로
+                </button>
+            </p>
             <p className="text-sm text-gray-500 mb-4">
                 기분 색:{" "}
                 <span
@@ -57,14 +65,14 @@ const DiaryViewer: React.FC<DiaryViewerProps> = ({ today }) => {
             <hr className="mb-4 border-gray-300" />
 
             {/* 본문 */}
-            {diary ? (
+            {diary?.diaryId != -1 ? (
                 <>
                     <div className="space-y-4 text-gray-700 leading-relaxed whitespace-pre-line">
-                        {diary.diaryText}
+                        {diary?.diaryText}
                     </div>
 
                     {/* Doodle 정보 */}
-                    {diary.doodleId && (
+                    {diary?.doodleId && (
                         <p className="mt-4 text-sm text-gray-500">
                             관련 낙서 ID: {diary.doodleId}
                         </p>
@@ -74,7 +82,7 @@ const DiaryViewer: React.FC<DiaryViewerProps> = ({ today }) => {
                 <div className="text-center text-gray-500">
                     {!showEditor ? (
                         <>
-                            <p className="mb-4">해당 날짜({diaryDate})의 일기가 없습니다.</p>
+                            <p className="mb-4">해당 날짜의 일기가 없습니다.</p>
                             <button
                                 onClick={() => setShowEditor(true)}
                                 className="px-4 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600"
