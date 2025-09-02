@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axiosInstance from "../../api/axiosInterceptor";
-import DiaryEditor from "./DiaryEditor"; // 같은 경로에 있다고 하셨죠!
+import axiosInstance from "../../api/axiosInstance.ts";
+import DiaryEditor from "./DiaryEditor.tsx";
 
 interface Diary {
     diaryId: number;

@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
-import DiaryViewer from "../components/Diary/DiaryViewer";
-import MessageList from "../components/Diary/MessageList";
+import DiaryViewer from "../components/diary_components/DiaryViewer";
+import MessageList from "../components/diary_components/MessageList";
 import type { RootState } from "../store/store";
 import { useState } from "react";
 

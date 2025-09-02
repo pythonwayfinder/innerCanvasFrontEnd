@@ -57,7 +57,7 @@ const MainPage = () => {
                                 내 기록 보러가기
                             </Link>
                         ) : (
-                            <Link to="/signup"
+                            <Link to="/login"
                                   className="bg-[#7286D3] text-white font-bold py-3 px-8 rounded-full hover:bg-[#5B6CA8] transition-all duration-300 text-lg">
                                 지금 시작하기
                             </Link>

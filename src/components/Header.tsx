@@ -16,7 +16,8 @@ const Header = () => {
             await axiosInstance.post('/auth/logout');
             dispatch(logout());
             navigate('/login', {replace: true});
-        } catch {
+        } catch(err) {
+            console.log(err)
         }
     };
 
@@ -28,17 +29,21 @@ const Header = () => {
         </span>
                 <img src={logo} alt="Inner Canvas Logo" className="h-10 w-10 ml-1 mb-2" />
             </Link>
-            {/* 가운데 달력 메뉴 (고정) */}
-            <div
-                className="absolute z-20"
-                style={{ left: 'calc(50% + 80px)', top: 'calc(50% - 480px)', transform: 'translate(-50%, -50%)' }}
-            >
+            {/* 가운데 섹션: 주 메뉴 (달력, 일기장) */}
+            <div className="flex-1 flex justify-center items-center space-x-6 text-slate-700 font-bold">
+                {/*<Link*/}
+                {/*    to="/calendar"*/}
+                {/*    className="inline-block px-4 py-2 rounded-md w-21 text-center border border-[#A6B1E1] hover:bg-[#D4DAF7] hover:text-[#5B6CA8] transition-colors"*/}
+                {/*>*/}
+                {/*    달력*/}
+                {/*</Link>*/}
                 <Link
-                    to="/calendar"
-                    className="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600 transition-colors"
+                    to="/diary"
+                    className="inline-block px-4 py-2 rounded-md w-21 text-center border border-[#A6B1E1] hover:bg-[#D4DAF7] hover:text-[#5B6CA8] transition-colors"
                 >
-                    달력
+                    일기장
                 </Link>
+
             </div>
             <nav>
                 {isAuthenticated ? (

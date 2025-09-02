@@ -1,107 +1,95 @@
-// src/pages/MyPage.tsx
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import type { AppDispatch, RootState } from '../store/store';
-import { logout, updateProfile } from '../store/authSlice';
 import { useNavigate } from 'react-router-dom';
+import type { AppDispatch, RootState } from '../store/store';
+import { updateProfile } from '../store/authSlice';
+import { updateMe, changePassword } from '../api/userApi';
+
+// 컴포넌트들
+import ProfileSection from '../components/mypage/ProfileSection';
+import ProfileEditModal from '../components/mypage/ProfileEditModal';
+import Calendar from '../components/calendar/Calendar';
+import MyInquiry from '../components/Inquiry/MyInquiry'; // ✅ 경로 및 대소문자 주의
 
 export default function MyPage() {
     const dispatch: AppDispatch = useDispatch();
     const navigate = useNavigate();
     const { isAuthenticated, user } = useSelector((s: RootState) => s.auth);
 
-    const [editing, setEditing] = useState(false);
-    const [username, setUsername] = useState(user?.username ?? '');
-    const [email, setEmail] = useState(user?.email ?? '');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [activeTab, setActiveTab] = useState<'calendar' | 'inquiry'>('calendar');
 
     if (!isAuthenticated || !user) {
-        return <div className="p-6 text-center text-gray-600">로그인이 필요합니다.</div>;
+        navigate('/login', { replace: true });
+        return null;
     }
 
+    const handleProfileSave = async (updateData: { email: string; birthDate?: string }) => {
+        const { data } = await updateMe(updateData);
+        dispatch(
+            updateProfile({
+                username: data.username,
+                email: data.email,
+                role: data.role,
+                age: data.age ?? undefined,
+            })
+        );
+        setIsModalOpen(false);
+    };
+
+    const handlePasswordSave = async (passwordData: any) => {
+        await changePassword(passwordData);
+    };
+
     return (
-        <div className="px-4 py-10">
-            {!editing ? (
-                <div className="w-full max-w-md mx-auto">
-                    <div className="relative">
-                        <div className="absolute -inset-2 rounded-3xl bg-black/5 blur-xl"></div>
-                        <div className="relative rounded-3xl bg-white shadow-xl p-8">
-                            <h2 className="text-center text-gray-800 font-semibold mb-6">My Page</h2>
+        <div className="flex w-full min-h-screen p-8 gap-8 bg-gray-50 items-start">
+            {/* 사이드바 - 프로필 + 버튼 */}
+            <aside className="w-72 flex-shrink-0">
+                <ProfileSection user={user} onEditClick={() => setIsModalOpen(true)} />
 
-                            <div className="w-20 h-20 mx-auto rounded-full bg-gray-100 grid place-items-center text-gray-400 text-2xl font-bold">
-                                {user.username.at(0)}
-                            </div>
+                {/* 버튼 영역 */}
+                <div className="mt-8">
+                    <h2 className="text-gray-700 font-semibold mb-2">내 활동</h2>
+                    <div className="flex flex-col gap-2">
+                        <button
+                            onClick={() => setActiveTab('inquiry')}
+                            className={`w-full py-2 px-4 rounded transition-colors ${
+                                activeTab === 'inquiry'
+                                    ? 'bg-[#4D4F94] text-white font-bold'
+                                    : 'bg-[#F8F4E3] text-[#4D4F94] hover:text-[#7286D3] font-normal'
+                            }`}
+                        >
+                            문의하기
+                        </button>
 
-                            <h3 className="text-2xl font-semibold text-center mt-4">{user.username}</h3>
-
-                            <div className="mt-3 space-y-1 text-gray-600 text-sm text-center">
-                                <p>Email: {user.email}</p>
-                                <p>Role: {user.role}</p>
-                            </div>
-
-                            <div className="mt-6 grid grid-cols-2 gap-3">
-                                <button
-                                    onClick={() => { setUsername(user.username); setEmail(user.email); setEditing(true); }}
-                                    className="rounded-xl border border-teal-700 px-4 py-2 text-teal-800 hover:bg-teal-50 transition"
-                                >
-                                    Edit Profile
-                                </button>
-
-                                <button
-                                    onClick={() => { dispatch(logout()); navigate('/login', { replace: true }); }}
-                                    className="rounded-xl border border-red-600 px-4 py-2 text-red-700 hover:bg-red-50 transition"
-                                >
-                                    Logout
-                                </button>
-                            </div>
-                        </div>
+                        <button
+                            onClick={() => setActiveTab('calendar')}
+                            className={`w-full py-2 px-4 rounded transition-colors ${
+                                activeTab === 'inquiry'
+                                    ? 'bg-[#4D4F94] text-white font-bold'
+                                    : 'bg-[#F8F4E3] text-[#4D4F94] hover:text-[#7286D3] font-normal'
+                            }`}
+                        >
+                            감정 달력
+                        </button>
                     </div>
                 </div>
-            ) : (
-                <form
-                    className="w-full max-w-md mx-auto"
-                    onSubmit={(e) => {
-                        e.preventDefault();
-                        dispatch(updateProfile({ username, email }));
-                        setEditing(false);
-                    }}
-                >
-                    <div className="relative">
-                        <div className="absolute -inset-2 rounded-3xl bg-black/5 blur-xl"></div>
-                        <div className="relative rounded-3xl bg-white shadow-xl p-8 space-y-4">
-                            <h2 className="text-center text-gray-800 font-semibold">Edit Profile</h2>
+            </aside>
 
-                            <label className="block">
-                                <span className="text-sm text-gray-600">Username</span>
-                                <input
-                                    className="mt-1 w-full rounded-xl border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
-                                    value={username}
-                                    onChange={(e) => setUsername(e.target.value)}
-                                    required
-                                />
-                            </label>
+            {/* 메인 콘텐츠 */}
+            <main className="flex-grow bg-white p-6 rounded-lg shadow-md">
+                {activeTab === 'calendar' && <Calendar />}
+                {activeTab === 'inquiry' && <MyInquiry />}
+            </main>
 
-                            <label className="block">
-                                <span className="text-sm text-gray-600">Email</span>
-                                <input
-                                    type="email"
-                                    className="mt-1 w-full rounded-xl border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    required
-                                />
-                            </label>
-
-                            <div className="flex gap-3 pt-2">
-                                <button type="submit" className="flex-1 rounded-xl bg-teal-600 text-white py-2 hover:bg-teal-700 transition">
-                                    Save
-                                </button>
-                                <button type="button" onClick={() => setEditing(false)} className="flex-1 rounded-xl border border-gray-300 py-2 hover:bg-gray-50 transition">
-                                    Cancel
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
+            {/* 프로필 수정 모달 */}
+            {isModalOpen && (
+                <ProfileEditModal
+                    user={user}
+                    onClose={() => setIsModalOpen(false)}
+                    onProfileSave={handleProfileSave}
+                    onPasswordSave={handlePasswordSave}
+                />
             )}
         </div>
     );

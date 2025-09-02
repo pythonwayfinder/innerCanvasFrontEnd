@@ -34,7 +34,7 @@ const LoginPage = () => {
             const response = await axiosInstance.post('/auth/login', { username, password });
             // 🔄 response.data에서 accessToken과 user를 함께 구조 분해 할당합니다.
             const { accessToken, user } = response.data;
-
+            console.log(response.data);
             localStorage.setItem('accessToken', accessToken);
             // ✅ 서버로부터 받은 실제 user 객체를 Redux에 전달합니다.
             dispatch(loginSuccess({ user, accessToken }));

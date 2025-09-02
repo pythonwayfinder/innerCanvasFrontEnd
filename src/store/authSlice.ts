@@ -1,11 +1,11 @@
-// src/store/authSlice.ts
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 export interface User {
     username: string;
     email: string;
     role: string;
-    age?: number; // 필요하면 주석 해제
+    age?: number;        // 서버에서 계산된 나이
+    birthDate?: string;  // YYYY-MM-DD
 }
 
 interface AuthState {
@@ -37,7 +37,6 @@ const authSlice = createSlice({
             state.user = action.payload.user;
             state.accessToken = action.payload.accessToken;
             state.loading = false;
-            // LoginPage에서 localStorage.setItem을 이미 하므로 여기선 생략
         },
         loginFailure(state, action: PayloadAction<string>) {
             state.isAuthenticated = false;
@@ -63,7 +62,6 @@ const authSlice = createSlice({
             state.accessToken = null;
             localStorage.removeItem('accessToken');
         },
-        // ✅ MyPage에서 즉시 화면 반영용(서버 저장은 추후)
         updateProfile(state, action: PayloadAction<Partial<User>>) {
             if (!state.user) return;
             state.user = { ...state.user, ...action.payload };
