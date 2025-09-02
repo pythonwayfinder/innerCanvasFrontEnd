@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import MessageBubble from "./MessageBubble";
+import MessageBubble from "./MessageBubble.tsx";
 import axiosInstance from "../../api/axiosInstance.ts";
 
 interface ChatMessage {

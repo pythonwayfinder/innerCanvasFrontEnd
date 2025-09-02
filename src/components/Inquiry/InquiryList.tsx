@@ -1,5 +1,5 @@
-import React from 'react';
 import useMyInquiries from '../../hooks/useMyInquiries';
+import type { Inquiry } from '../../hooks/useMyInquiries';
 
 interface InquiryListProps {
     selectedInquiryId: string | null;
