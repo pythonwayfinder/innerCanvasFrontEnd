@@ -8,15 +8,11 @@ interface InquiryListProps {
 }
 
 export default function InquiryList({ selectedInquiryId, onSelectInquiry }: InquiryListProps) {
-    const { inquiries, loading, error, refetch } = useMyInquiries();
+    const { inquiries, loading, error } = useMyInquiries();
 
-    // 1. 로딩 중
     if (loading) return <p className="text-center mt-4">로딩 중...</p>;
-
-    // 2. 에러 발생
     if (error) return <p className="text-center mt-4 text-red-500">{error}</p>;
 
-    // 3. 문의가 하나도 없을 때
     if (!inquiries.length) {
         return (
             <div className="text-center mt-8 text-gray-500">
@@ -25,7 +21,6 @@ export default function InquiryList({ selectedInquiryId, onSelectInquiry }: Inqu
         );
     }
 
-    // 4. 문의 상세 보기
     if (selectedInquiryId) {
         const inquiry = inquiries.find(i => i.id === selectedInquiryId);
         if (!inquiry) {
@@ -38,32 +33,24 @@ export default function InquiryList({ selectedInquiryId, onSelectInquiry }: Inqu
         return <InquiryDetail inquiry={inquiry} />;
     }
 
-    // 5. 문의 목록 보여주기
     return (
-        <div>
-            <div className="flex justify-end mb-2">
-                <button onClick={refetch} className="text-blue-500 hover:underline">
-                    새로고침
-                </button>
-            </div>
-            <ul className="divide-y">
-                {inquiries.map((inq) => (
-                    <li
-                        key={inq.id}
-                        className="py-3 cursor-pointer hover:bg-gray-100 px-2 rounded"
-                        onClick={() => onSelectInquiry(inq.id)}
-                    >
-                        <p className="font-bold">{inq.title}</p>
-                        <p className="text-sm text-gray-600 line-clamp-2">{inq.content}</p>
-                        {inq.answer ? (
-                            <p className="mt-2 text-green-700">💬 답변 있음</p>
-                        ) : (
-                            <p className="mt-2 text-gray-500">⏳ 답변 대기 중</p>
-                        )}
-                    </li>
-                ))}
-            </ul>
-        </div>
+        <ul className="divide-y">
+            {inquiries.map((inq) => (
+                <li
+                    key={inq.id}
+                    className="py-3 cursor-pointer hover:bg-gray-100 px-2 rounded"
+                    onClick={() => onSelectInquiry(inq.id)}
+                >
+                    <p className="font-bold">{inq.title}</p>
+                    <p className="text-sm text-gray-600 line-clamp-2">{inq.content}</p>
+                    {inq.answer ? (
+                        <p className="mt-2 text-green-700">💬 답변 있음</p>
+                    ) : (
+                        <p className="mt-2 text-gray-500">⏳ 답변 대기 중</p>
+                    )}
+                </li>
+            ))}
+        </ul>
     );
 }
 
