@@ -5,17 +5,19 @@ import type { AppDispatch, RootState } from '../store/store';
 import { updateProfile } from '../store/authSlice';
 import { updateMe, changePassword } from '../api/userApi';
 
-// 프로필 관련 컴포넌트 import
+// 컴포넌트들
 import ProfileSection from '../components/mypage/ProfileSection';
 import ProfileEditModal from '../components/mypage/ProfileEditModal';
-// 새로 만든 재사용 달력 컴포넌트를 import 합니다.
 import Calendar from '../components/calendar/Calendar';
+import MyInquiry from '../components/Inquiry/MyInquiry'; // ✅ 경로 및 대소문자 주의
 
 export default function MyPage() {
     const dispatch: AppDispatch = useDispatch();
     const navigate = useNavigate();
     const { isAuthenticated, user } = useSelector((s: RootState) => s.auth);
+
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [activeTab, setActiveTab] = useState<'calendar' | 'inquiry'>('calendar');
 
     if (!isAuthenticated || !user) {
         navigate('/login', { replace: true });
@@ -41,15 +43,43 @@ export default function MyPage() {
 
     return (
         <div className="flex w-full min-h-screen p-8 gap-8 bg-gray-50 items-start">
-            {/* 왼쪽 프로필 섹션 */}
+            {/* 사이드바 - 프로필 + 버튼 */}
             <aside className="w-72 flex-shrink-0">
                 <ProfileSection user={user} onEditClick={() => setIsModalOpen(true)} />
+
+                {/* 버튼 영역 */}
+                <div className="mt-8">
+                    <h2 className="text-gray-700 font-semibold mb-2">내 활동</h2>
+                    <div className="flex flex-col gap-2">
+                        <button
+                            onClick={() => setActiveTab('inquiry')}
+                            className={`w-full py-2 px-4 rounded transition-colors ${
+                                activeTab === 'inquiry'
+                                    ? 'bg-[#4D4F94] text-white font-bold'
+                                    : 'bg-[#F8F4E3] text-[#4D4F94] hover:text-[#7286D3] font-normal'
+                            }`}
+                        >
+                            문의하기
+                        </button>
+
+                        <button
+                            onClick={() => setActiveTab('calendar')}
+                            className={`w-full py-2 px-4 rounded transition-colors ${
+                                activeTab === 'inquiry'
+                                    ? 'bg-[#4D4F94] text-white font-bold'
+                                    : 'bg-[#F8F4E3] text-[#4D4F94] hover:text-[#7286D3] font-normal'
+                            }`}
+                        >
+                            감정 달력
+                        </button>
+                    </div>
+                </div>
             </aside>
 
-            {/* 중앙 메인 컨텐츠 (달력) */}
+            {/* 메인 콘텐츠 */}
             <main className="flex-grow bg-white p-6 rounded-lg shadow-md">
-                {/* 이제 달력 컴포넌트를 간단하게 렌더링하기만 하면 됩니다. */}
-                <Calendar />
+                {activeTab === 'calendar' && <Calendar />}
+                {activeTab === 'inquiry' && <MyInquiry />}
             </main>
 
             {/* 프로필 수정 모달 */}
