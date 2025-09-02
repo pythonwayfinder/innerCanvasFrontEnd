@@ -56,7 +56,7 @@ export default function MyPage() {
                             className={`w-full py-2 px-4 rounded transition-colors ${
                                 activeTab === 'inquiry'
                                     ? 'bg-[#4D4F94] text-white font-bold'
-                                    : 'bg-[#F8F4E3] text-[#4D4F94] hover:text-[#7286D3] font-normal'
+                                    : 'bg-[#F8F4E3] text-[#4D4F94] hover:text-[#7286D3] font-bold'
                             }`}
                         >
                             문의하기
@@ -67,7 +67,7 @@ export default function MyPage() {
                             className={`w-full py-2 px-4 rounded transition-colors ${
                                 activeTab === 'inquiry'
                                     ? 'bg-[#4D4F94] text-white font-bold'
-                                    : 'bg-[#F8F4E3] text-[#4D4F94] hover:text-[#7286D3] font-normal'
+                                    : 'bg-[#F8F4E3] text-[#4D4F94] hover:text-[#7286D3] font-bold'
                             }`}
                         >
                             감정 달력

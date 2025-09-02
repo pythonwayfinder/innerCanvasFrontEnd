@@ -25,14 +25,14 @@ export default function MyInquiry() {
             {showForm ? (
                 <>
                     <InquiryForm onSuccess={handleFormSuccess} />
-                    <div className="flex justify-end mt-4 gap-2">
-                        <button
-                            onClick={() => setShowForm(false)}
-                            className="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600"
-                        >
-                            목록으로 돌아가기
-                        </button>
-                    </div>
+                    {/*<div className="flex justify-end mt-4 gap-2">*/}
+                    {/*    <button*/}
+                    {/*        onClick={() => setShowForm(false)}*/}
+                    {/*        className="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600"*/}
+                    {/*    >*/}
+                    {/*        목록으로 돌아가기*/}
+                    {/*    </button>*/}
+                    {/*</div>*/}
                 </>
             ) : selectedInquiryId ? (
                 <>
