@@ -6,12 +6,12 @@ import useMyInquiries from '../../hooks/useMyInquiries';
 export default function MyInquiry() {
     const [showForm, setShowForm] = useState(false);
     const [selectedInquiryId, setSelectedInquiryId] = useState<string | null>(null);
-    const { refetch } = useMyInquiries(); // ✅ 새로고침 함수 가져옴
+    const { refetch } = useMyInquiries();
 
     const handleFormSuccess = () => {
         setShowForm(false);
         setSelectedInquiryId(null);
-        refetch(); // 문의 등록 후 목록 갱신
+        refetch();
     };
 
     const handleBackToList = () => {
@@ -25,14 +25,6 @@ export default function MyInquiry() {
             {showForm ? (
                 <>
                     <InquiryForm onSuccess={handleFormSuccess} />
-                    {/*<div className="flex justify-end mt-4 gap-2">*/}
-                    {/*    <button*/}
-                    {/*        onClick={() => setShowForm(false)}*/}
-                    {/*        className="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600"*/}
-                    {/*    >*/}
-                    {/*        목록으로 돌아가기*/}
-                    {/*    </button>*/}
-                    {/*</div>*/}
                 </>
             ) : selectedInquiryId ? (
                 <>
@@ -43,7 +35,7 @@ export default function MyInquiry() {
                     <div className="flex justify-end mt-4 gap-2">
                         <button
                             onClick={handleBackToList}
-                            className="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600"
+                            className="bg-[#f8f6ef] text-gray-800 py-2 px-4 rounded border border-gray-300 hover:bg-[#ece9dd]"
                         >
                             목록으로 돌아가기
                         </button>
@@ -58,13 +50,13 @@ export default function MyInquiry() {
                     <div className="flex justify-end mt-4 gap-2">
                         <button
                             onClick={refetch}
-                            className="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600"
+                            className="bg-[#f8f6ef] text-gray-800 py-2 px-4 rounded border border-gray-300 hover:bg-[#ece9dd]"
                         >
                             새로고침
                         </button>
                         <button
                             onClick={() => setShowForm(true)}
-                            className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+                            className="bg-[#f8f6ef] text-gray-800 py-2 px-4 rounded border border-gray-300 hover:bg-[#ece9dd]"
                         >
                             문의하기
                         </button>

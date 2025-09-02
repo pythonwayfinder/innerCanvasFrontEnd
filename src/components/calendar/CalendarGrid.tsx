@@ -7,14 +7,15 @@ interface Props {
     onDateClick: (date: Date) => void;
 }
 
-const daysOfWeek = ['월', '화', '수', '목', '금', '토', '일'];
+// ✅ 요일 순서: 일 ~ 토
+const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
 
 const CalendarGrid: React.FC<Props> = ({ date, moodData, onDateClick }) => {
     const year = date.getFullYear();
     const month = date.getMonth();
 
-    // 첫 날의 요일 (월=0, ... 일=6 로 맞추기 위해 +6 % 7)
-    const firstDay = (new Date(year, month, 1).getDay() + 6) % 7;
+    // ✅ JS의 getDay(): 0(일) ~ 6(토)
+    const firstDay = new Date(year, month, 1).getDay();
 
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const totalCells = firstDay + daysInMonth;
@@ -28,6 +29,7 @@ const CalendarGrid: React.FC<Props> = ({ date, moodData, onDateClick }) => {
 
     return (
         <div>
+            {/* 요일 헤더 */}
             <div className="grid grid-cols-7 text-center font-semibold text-[#6b7280] mb-2 select-none">
                 {daysOfWeek.map(day => (
                     <div key={day} className="py-2 border-b border-gray-300">
@@ -36,6 +38,7 @@ const CalendarGrid: React.FC<Props> = ({ date, moodData, onDateClick }) => {
                 ))}
             </div>
 
+            {/* 날짜 셀 */}
             <div className="grid grid-cols-7 gap-2">
                 {calendarCells.map((day, idx) => {
                     if (!day) {
@@ -45,12 +48,15 @@ const CalendarGrid: React.FC<Props> = ({ date, moodData, onDateClick }) => {
                     const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                     const mood = moodData[dateStr] || null;
 
-                    // 요일 계산 (0=월 ... 5=토, 6=일)
                     const dayOfWeek = idx % 7;
-                    const isWeekend = dayOfWeek === 5 || dayOfWeek === 6;
 
-                    // 주말이면 날짜 숫자 빨간색
-                    const weekendTextClass = isWeekend ? 'text-red-500' : '';
+                    // ✅ 요일에 따라 색상 지정
+                    let dayTextClass = '';
+                    if (dayOfWeek === 0) {
+                        dayTextClass = 'text-red-500'; // 일요일
+                    } else if (dayOfWeek === 6) {
+                        dayTextClass = 'text-blue-500'; // 토요일
+                    }
 
                     return (
                         <CalendarDay
@@ -58,7 +64,7 @@ const CalendarGrid: React.FC<Props> = ({ date, moodData, onDateClick }) => {
                             day={day}
                             mood={mood}
                             onClick={() => onDateClick(new Date(year, month, day))}
-                            className={weekendTextClass}
+                            className={dayTextClass}
                         />
                     );
                 })}

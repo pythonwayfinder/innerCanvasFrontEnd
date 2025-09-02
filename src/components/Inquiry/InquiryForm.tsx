@@ -60,14 +60,14 @@ export default function InquiryForm({ onSuccess }: InquiryFormProps) {
                 <button
                     type="button"
                     onClick={onSuccess}
-                    className="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600"
+                    className="bg-[#f8f6ef] text-gray-800 py-2 px-4 rounded border border-gray-300 hover:bg-[#ece9dd]"
                     disabled={loading}
                 >
                     목록으로 돌아가기
                 </button>
                 <button
                     type="submit"
-                    className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 disabled:opacity-50 text-sm"
+                    className="bg-[#f8f6ef] text-gray-800 py-2 px-4 rounded border border-gray-300 hover:bg-[#ece9dd] disabled:opacity-50 text-sm"
                     disabled={loading}
                 >
                     {loading ? '제출 중...' : '문의 제출'}

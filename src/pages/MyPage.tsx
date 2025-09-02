@@ -51,23 +51,25 @@ export default function MyPage() {
                 <div className="mt-8">
                     <h2 className="text-gray-700 font-semibold mb-2">내 활동</h2>
                     <div className="flex flex-col gap-2">
+                        {/* 문의하기 버튼 */}
                         <button
                             onClick={() => setActiveTab('inquiry')}
-                            className={`w-full py-2 px-4 rounded transition-colors ${
+                            className={`w-full py-2 px-4 rounded transition-colors font-bold ${
                                 activeTab === 'inquiry'
-                                    ? 'bg-[#4D4F94] text-white font-bold'
-                                    : 'bg-[#F8F4E3] text-[#4D4F94] hover:text-[#7286D3] font-bold'
+                                    ? 'bg-[#4D4F94] text-white'
+                                    : 'bg-[#F8F4E3] text-[#4D4F94] hover:text-[#7286D3]'
                             }`}
                         >
                             문의하기
                         </button>
 
+                        {/* 감정 달력 버튼 */}
                         <button
                             onClick={() => setActiveTab('calendar')}
-                            className={`w-full py-2 px-4 rounded transition-colors ${
-                                activeTab === 'inquiry'
-                                    ? 'bg-[#4D4F94] text-white font-bold'
-                                    : 'bg-[#F8F4E3] text-[#4D4F94] hover:text-[#7286D3] font-bold'
+                            className={`w-full py-2 px-4 rounded transition-colors font-bold ${
+                                activeTab === 'calendar'
+                                    ? 'bg-[#4D4F94] text-white'
+                                    : 'bg-[#F8F4E3] text-[#4D4F94] hover:text-[#7286D3]'
                             }`}
                         >
                             감정 달력
