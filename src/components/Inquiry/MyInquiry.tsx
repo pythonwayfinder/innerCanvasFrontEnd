@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import InquiryForm from './InquiryForm';
 import InquiryList from './InquiryList';
 import useMyInquiries from '../../hooks/useMyInquiries';
