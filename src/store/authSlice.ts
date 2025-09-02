@@ -1,11 +1,12 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 export interface User {
+    birth_day_date: string | undefined;
     username: string;
     email: string;
     role: string;
     age?: number;        // 서버에서 계산된 나이
-    birthDate?: string;  // YYYY-MM-DD
+    birthDate?: string | null; // ✅ 추가
 }
 
 interface AuthState {

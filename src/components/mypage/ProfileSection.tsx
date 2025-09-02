@@ -3,6 +3,7 @@ type User = {
     email: string;
     age: number | null;
     role: string;
+    birth_day_date: string | null;
 };
 
 type ProfileSectionProps = {
