@@ -12,9 +12,10 @@ interface ChatMessage {
 
 interface MessageListProps {
     diaryId: number;
+    type: number;
 }
 
-const MessageList: React.FC<MessageListProps> = ({ diaryId }) => {
+const MessageList: React.FC<MessageListProps> = ({ diaryId, type }) => {
     const [messages, setMessages] = useState<ChatMessage[]>([]);
 
     const fetchMessages = async () => {

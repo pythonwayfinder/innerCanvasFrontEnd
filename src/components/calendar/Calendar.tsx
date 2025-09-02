@@ -33,6 +33,7 @@ export default function Calendar() {
     const handleDateClick = (date: Date) => {
         if (isAuthenticated) {
             alert(`선택한 날짜: ${date.toDateString()}`);
+            navigate('/diary', { state: {select_date: date}});
         } else {
             navigate('/login');
         }
