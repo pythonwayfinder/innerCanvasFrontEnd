@@ -7,7 +7,6 @@ import DiaryEditor from "./DiaryEditor.tsx";
 interface Diary {
     diaryId: number;
     userId: number;
-    doodleId?: number | null;
     diaryText: string;
     moodColor?: string | null;
     createdAt: string | "";
@@ -17,9 +16,10 @@ interface DiaryViewerProps {
     diaryData: Diary | null;
     type: number;
     date: string;
+    setAiResult: (text: string) => void;
 }
 
-const DiaryViewer: React.FC<DiaryViewerProps> = ({ diaryData, type, date }) => {
+const DiaryViewer: React.FC<DiaryViewerProps> = ({ diaryData, type, date, setAiResult }) => {
     const [diary, setDiary] = useState<Diary | null>(diaryData);
     const [showEditor, setShowEditor] = useState(false);
     const navigate = useNavigate();
@@ -74,11 +74,11 @@ const DiaryViewer: React.FC<DiaryViewerProps> = ({ diaryData, type, date }) => {
                     </div>
 
                     {/* Doodle 정보 */}
-                    {diary.doodleId && (
+                    {/* {diary.doodleId && (
                         <p className="mt-4 text-sm text-gray-500">
                             관련 낙서 ID: {diary.doodleId}
                         </p>
-                    )}
+                    )} */}
                 </>
             ) : (
                 <div className="text-center text-gray-500">
@@ -113,7 +113,7 @@ const DiaryViewer: React.FC<DiaryViewerProps> = ({ diaryData, type, date }) => {
                             </div>
                         </>
                     ) : (
-                        <DiaryEditor />
+                        <DiaryEditor setAiResult={setAiResult}/>
                     )}
                 </div>
             )}

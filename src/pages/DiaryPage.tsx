@@ -15,6 +15,13 @@ interface Diary {
     createdAt: string;
 }
 
+interface DiaryViewerProps {
+    diaryData: Diary | null;
+    type: number;
+    date: string;
+    setAiResult: (text: string) => void;
+}
+
 function Diary() {
     // const today = new Date().toISOString().split("T")[0];
     // console.log(today);
@@ -31,6 +38,8 @@ function Diary() {
     const { isAuthenticated, user } = useSelector((s: RootState) => s.auth);
 
     const [username, setUsername] = useState(user?.username ?? '');
+
+    const [aiResult, setAiResult] = useState('');
 
     useEffect(() => {
         if (!select_date || !isAuthenticated) {
@@ -56,17 +65,11 @@ function Diary() {
             setType(2);  // 오늘이 아니면 type = 2
         }
 
-        setDate_(          
-            select_date.toLocaleDateString("ko-KR", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-            }).replace(/\./g, '').replace(/\s/g, '-')
-        );
+        setDate_(selectStr);
 
         axiosInstance
             .get<Diary>("/diary", {
-                params: { userName: username, date: date_ }, // userId 예시
+                params: { userName: username, date: selectStr }, // userId 예시
             })
             .then((res) => {
                 if (res.data) {
@@ -74,7 +77,7 @@ function Diary() {
                 }
             })
             .catch(() => setDiary(null))
-            .finally(() => setLoading(false));        
+            .finally(() => setLoading(false));
     }, [select_date]);
 
     if (loading) return <p className="text-center text-gray-500">⏳ 불러오는 중...</p>;
@@ -85,13 +88,17 @@ function Diary() {
             <div className="flex flex-wrap justify-center w-full max-w-[1700px] gap-6 px-4">
                 {/* 왼쪽: DiaryViewer + DiaryEditor */}
                 <div className="flex flex-col min-w-[600px] max-w-[800px] flex-1">
-                    <DiaryViewer diaryData={diary} type={type} date={date_}/>
+                    <DiaryViewer diaryData={diary} type={type} date={date_} setAiResult={setAiResult} />
                 </div>
 
                 {/* 오른쪽: MessageList */}
-                <div className="min-w-[600px] max-w-[800px] flex-1">
-                    <AIChat diaryId={diary ? diary.diaryId : -1} type={type}/>
-                </div>
+                {diary != null || aiResult ? (
+                    <div className="min-w-[600px] max-w-[800px] flex-1">
+                        <AIChat diaryId={diary ? diary.diaryId : -1} type={type} aiResult={aiResult} />
+                    </div>
+                ) : 
+                    <></>
+                }
             </div>
         </div>
     );
