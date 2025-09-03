@@ -48,9 +48,15 @@ const Header = () => {
             <nav>
                 {isAuthenticated ? (
                     <div className="flex items-center space-x-4 text-slate-700 font-bold">
-                        <Link to="/mypage" className="px-3 py-2 rounded-md hover:bg-[#D4DAF7] hover:text-[#5B6CA8] transition-colors">
-                            마이페이지
-                        </Link>
+                        {user.role == "ADMIN"?(
+                            <Link to="/adminpage" className="px-3 py-2 rounded-md hover:bg-[#D4DAF7] hover:text-[#5B6CA8] transition-colors">
+                                관리자페이지
+                            </Link>
+                        ):(
+                            <Link to="/mypage" className="px-3 py-2 rounded-md hover:bg-[#D4DAF7] hover:text-[#5B6CA8] transition-colors">
+                                마이페이지
+                            </Link>
+                        )}
                         <span className="text-lg">
                     환영합니다, <span className="text-[#8C7ED4]">{user?.username}</span>님!
                 </span>

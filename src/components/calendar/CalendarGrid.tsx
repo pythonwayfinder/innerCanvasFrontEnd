@@ -7,15 +7,20 @@ interface Props {
     onDateClick: (date: Date) => void;
 }
 
-// ✅ 요일 순서: 일 ~ 토
-const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
+const daysOfWeek = ['월', '화', '수', '목', '금', '토', '일'];
 
 const CalendarGrid: React.FC<Props> = ({ date, moodData, onDateClick }) => {
     const year = date.getFullYear();
     const month = date.getMonth();
+    
+    // 오늘 날짜
+    const today = new Date();
+    const todayYear = today.getFullYear();
+    const todayMonth = today.getMonth();
+    const todayDate = today.getDate();
 
-    // ✅ JS의 getDay(): 0(일) ~ 6(토)
-    const firstDay = new Date(year, month, 1).getDay();
+    // 첫 날의 요일 (월=0, ... 일=6 로 맞추기 위해 +6 % 7)
+    const firstDay = (new Date(year, month, 1).getDay() + 6) % 7;
 
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const totalCells = firstDay + daysInMonth;
@@ -29,7 +34,6 @@ const CalendarGrid: React.FC<Props> = ({ date, moodData, onDateClick }) => {
 
     return (
         <div>
-            {/* 요일 헤더 */}
             <div className="grid grid-cols-7 text-center font-semibold text-[#6b7280] mb-2 select-none">
                 {daysOfWeek.map(day => (
                     <div key={day} className="py-2 border-b border-gray-300">
@@ -38,7 +42,6 @@ const CalendarGrid: React.FC<Props> = ({ date, moodData, onDateClick }) => {
                 ))}
             </div>
 
-            {/* 날짜 셀 */}
             <div className="grid grid-cols-7 gap-2">
                 {calendarCells.map((day, idx) => {
                     if (!day) {
@@ -48,15 +51,19 @@ const CalendarGrid: React.FC<Props> = ({ date, moodData, onDateClick }) => {
                     const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                     const mood = moodData[dateStr] || null;
 
+                    // 요일 계산 (0=월 ... 5=토, 6=일)
                     const dayOfWeek = idx % 7;
+                    const isWeekend = dayOfWeek === 5 || dayOfWeek === 6;
+                    
+                    // 오늘 날짜 체크
+                    const isToday =
+                        year === todayYear &&
+                        month === todayMonth &&
+                        day === todayDate;
 
-                    // ✅ 요일에 따라 색상 지정
-                    let dayTextClass = '';
-                    if (dayOfWeek === 0) {
-                        dayTextClass = 'text-red-500'; // 일요일
-                    } else if (dayOfWeek === 6) {
-                        dayTextClass = 'text-blue-500'; // 토요일
-                    }
+                    // 주말이면 날짜 숫자 빨간색
+                    const weekendTextClass = isWeekend ? 'text-red-500' : '';
+                    const todayBorderClass = isToday ? 'border-2 border-[#a7b4e0]' : 'border border-gray-300';
 
                     return (
                         <CalendarDay
@@ -64,7 +71,8 @@ const CalendarGrid: React.FC<Props> = ({ date, moodData, onDateClick }) => {
                             day={day}
                             mood={mood}
                             onClick={() => onDateClick(new Date(year, month, day))}
-                            className={dayTextClass}
+                            className={weekendTextClass}
+                            className2={todayBorderClass}
                         />
                     );
                 })}

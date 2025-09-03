@@ -18,17 +18,54 @@ interface MessageListProps {
 const MessageList: React.FC<MessageListProps> = ({ diaryId, type }) => {
     const [messages, setMessages] = useState<ChatMessage[]>([]);
 
-    const fetchMessages = async () => {
-        try {
-            const res = await axiosInstance.get(`/api/chat?diaryId=${diaryId}`);
-            setMessages(res.data); // 배열 형태 [{logId, diaryId, sender, message, createdAt}, ...]
-        } catch (err) {
-            console.error(err);
-        }
-    };
+    // const fetchMessages = async () => {
+    //     try {
+    //         const res = await axiosInstance.get(`/chat?diaryId=${diaryId}`);
+    //         setMessages(res.data); // 배열 형태 [{logId, diaryId, sender, message, createdAt}, ...]
+    //     } catch (err) {
+    //         console.error(err);
+    //     }
+    // };
 
+    // useEffect(() => {
+    //     fetchMessages();
+    // }, [diaryId]);
+    
     useEffect(() => {
-        fetchMessages();
+        // 더미 데이터 정의
+        const dummyMessages: ChatMessage[] = [
+            {
+                logId: 1,
+                diaryId,
+                sender: "user",
+                message: "오늘 기분이 좋네요!",
+                createdAt: new Date().toISOString(),
+            },
+            {
+                logId: 2,
+                diaryId,
+                sender: "ai",
+                message: "좋은 하루 보내셨군요. 😊",
+                createdAt: new Date().toISOString(),
+            },
+            {
+                logId: 3,
+                diaryId,
+                sender: "user",
+                message: "내일 날씨는 어떨까요?",
+                createdAt: new Date().toISOString(),
+            },
+            {
+                logId: 4,
+                diaryId,
+                sender: "ai",
+                message: "내일은 맑고 화창할 예정입니다.",
+                createdAt: new Date().toISOString(),
+            },
+        ];
+
+        // 메시지 상태에 바로 세팅
+        setMessages(dummyMessages);
     }, [diaryId]);
 
     return (
