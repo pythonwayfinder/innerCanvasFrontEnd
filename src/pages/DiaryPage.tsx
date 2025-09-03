@@ -20,6 +20,10 @@ function Diary() {
     // console.log(today);
     const location = useLocation();
     const { select_date } = location.state || {};
+    console.log(select_date);
+
+    const [date_, setDate_] = useState('');
+
     const [diary, setDiary] = useState<Diary | null>(null);
     const [loading, setLoading] = useState(true);
     const [type, setType] = useState(1);
@@ -27,27 +31,47 @@ function Diary() {
     const { isAuthenticated, user } = useSelector((s: RootState) => s.auth);
 
     const [username, setUsername] = useState(user?.username ?? '');
-    const [email, setEmail] = useState(user?.email ?? '');
 
-    // if (!isAuthenticated || !user) {
-    //     return <div className="p-6 text-center text-gray-600">로그인이 필요합니다.</div>;
-    // }
     useEffect(() => {
-        if (!select_date) {
+        if (!select_date || !isAuthenticated) {
             // date가 null, undefined, "" 등 falsy 값이면 실행
             setDiary(null); // 혹은 다른 처리
             setLoading(false);
             setType(1);
+            setUsername('');
             return; // axios 호출 종료
         }
 
+        // 오늘 날짜 (YYYY-MM-DD 형식)
+        const today = new Date();
+        const todayStr = today.toISOString().split("T")[0];
+
+        // select_date도 YYYY-MM-DD로 변환
+        const selectStr = select_date.toISOString().split("T")[0];
+
+        // 오늘 날짜와 비교해서 type 결정
+        if (selectStr === todayStr) {
+            setType(1);  // 오늘이면 type = 1
+        } else {
+            setType(2);  // 오늘이 아니면 type = 2
+        }
+
+        setDate_(          
+            select_date.toLocaleDateString("ko-KR", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+            }).replace(/\./g, '').replace(/\s/g, '-')
+        );
+
         axiosInstance
-            .get<Diary>("http://localhost:8080/api/diary", {
-                params: { userId: 1, date: select_date }, // userId 예시
+            .get<Diary>("/diary", {
+                params: { userName: username, date: date_ }, // userId 예시
             })
-            .then((res) => { 
-                setDiary(res.data);
-                setType(2);
+            .then((res) => {
+                if (res.data) {
+                    setDiary(res.data);
+                }
             })
             .catch(() => setDiary(null))
             .finally(() => setLoading(false));        
@@ -61,7 +85,7 @@ function Diary() {
             <div className="flex flex-wrap justify-center w-full max-w-[1700px] gap-6 px-4">
                 {/* 왼쪽: DiaryViewer + DiaryEditor */}
                 <div className="flex flex-col min-w-[600px] max-w-[800px] flex-1">
-                    <DiaryViewer diaryData={diary} type={type}/>
+                    <DiaryViewer diaryData={diary} type={type} date={date_}/>
                 </div>
 
                 {/* 오른쪽: MessageList */}

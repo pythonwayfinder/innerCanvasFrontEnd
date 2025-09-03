@@ -12,6 +12,12 @@ const daysOfWeek = ['월', '화', '수', '목', '금', '토', '일'];
 const CalendarGrid: React.FC<Props> = ({ date, moodData, onDateClick }) => {
     const year = date.getFullYear();
     const month = date.getMonth();
+    
+    // 오늘 날짜
+    const today = new Date();
+    const todayYear = today.getFullYear();
+    const todayMonth = today.getMonth();
+    const todayDate = today.getDate();
 
     // 첫 날의 요일 (월=0, ... 일=6 로 맞추기 위해 +6 % 7)
     const firstDay = (new Date(year, month, 1).getDay() + 6) % 7;
@@ -48,9 +54,16 @@ const CalendarGrid: React.FC<Props> = ({ date, moodData, onDateClick }) => {
                     // 요일 계산 (0=월 ... 5=토, 6=일)
                     const dayOfWeek = idx % 7;
                     const isWeekend = dayOfWeek === 5 || dayOfWeek === 6;
+                    
+                    // 오늘 날짜 체크
+                    const isToday =
+                        year === todayYear &&
+                        month === todayMonth &&
+                        day === todayDate;
 
                     // 주말이면 날짜 숫자 빨간색
                     const weekendTextClass = isWeekend ? 'text-red-500' : '';
+                    const todayBorderClass = isToday ? 'border-2 border-[#a7b4e0]' : 'border border-gray-300';
 
                     return (
                         <CalendarDay
@@ -59,6 +72,7 @@ const CalendarGrid: React.FC<Props> = ({ date, moodData, onDateClick }) => {
                             mood={mood}
                             onClick={() => onDateClick(new Date(year, month, day))}
                             className={weekendTextClass}
+                            className2={todayBorderClass}
                         />
                     );
                 })}

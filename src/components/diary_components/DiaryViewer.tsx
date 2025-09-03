@@ -16,29 +16,23 @@ interface Diary {
 interface DiaryViewerProps {
     diaryData: Diary | null;
     type: number;
+    date: string;
 }
 
-const DiaryViewer: React.FC<DiaryViewerProps> = ({ diaryData, type }) => {
+const DiaryViewer: React.FC<DiaryViewerProps> = ({ diaryData, type, date }) => {
     const [diary, setDiary] = useState<Diary | null>(diaryData);
     const [showEditor, setShowEditor] = useState(false);
     const navigate = useNavigate();
     const today = new Date().toISOString().split("T")[0];
+    const isToday = (date ? date === today : true);
 
     useEffect(() => {
-        if (type == 2) {
+        if (type == 2 && !diaryData) {
             setDiary(diaryData);
         }
         else {
-            const default_data: Diary = {
-                diaryId: -1,
-                userId: -1,
-                doodleId: -1,
-                diaryText: "no diary data",
-                moodColor: "없음",
-                createdAt: today            
-            };
-
-            setDiary(default_data);
+            setDiary(null);
+            return;
         }
     }, [diaryData, type])
 
@@ -46,33 +40,41 @@ const DiaryViewer: React.FC<DiaryViewerProps> = ({ diaryData, type }) => {
         <div className="p-6 border border-gray-300 rounded-2xl shadow bg-white w-full h-full max-w-3xl mx-auto">
             {/* 제목 및 날짜 */}
             <h2 className="text-2xl font-bold mb-1 text-gray-800">📖 일기</h2>
-            <p className="text-sm text-gray-500 mb-2">날짜: {diary?.createdAt}
+            <p className="text-sm text-gray-500 mb-2">날짜: {diary ? diary.createdAt : (date ? date : today)}
                 <button
                     className="ml-2 px-1 py-1 bg-green-500 text-white rounded-lg shadow hover:bg-green-600"
                     onClick={() => navigate('/calendar')}>
                     달력으로
                 </button>
             </p>
-            <p className="text-sm text-gray-500 mb-4">
-                기분 색:{" "}
-                <span
-                    className="font-semibold"
-                    style={{ color: diary?.moodColor || "#000" }}
-                >
-                    {diary?.moodColor || "없음"}
-                </span>
-            </p>
+            {diary ? (
+                // 해당 날짜의 일기가 있을 경우 기분 띄우기 
+                <p className="text-sm text-gray-500 mb-4">
+                    기분 색:{" "}
+                    <span
+                        className="font-semibold"
+                        style={{ color: diary?.moodColor || "#000" }}
+                    >
+                        {diary?.moodColor || "없음"}
+                    </span>
+                </p>
+            ) : (
+                // 해당 날짜 일기 없으면 패스
+                <div>
+
+                </div>
+            )}
             <hr className="mb-4 border-gray-300" />
 
             {/* 본문 */}
-            {diary?.diaryId != -1 ? (
+            {diary ? (
                 <>
                     <div className="space-y-4 text-gray-700 leading-relaxed whitespace-pre-line">
-                        {diary?.diaryText}
+                        {diary.diaryText}
                     </div>
 
                     {/* Doodle 정보 */}
-                    {diary?.doodleId && (
+                    {diary.doodleId && (
                         <p className="mt-4 text-sm text-gray-500">
                             관련 낙서 ID: {diary.doodleId}
                         </p>
@@ -83,12 +85,32 @@ const DiaryViewer: React.FC<DiaryViewerProps> = ({ diaryData, type }) => {
                     {!showEditor ? (
                         <>
                             <p className="mb-4">해당 날짜의 일기가 없습니다.</p>
-                            <button
-                                onClick={() => setShowEditor(true)}
-                                className="px-4 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600"
-                            >
-                                ✍️ 일기 작성하기
-                            </button>
+                            <div className="relative inline-block group">
+                                <button
+                                    onClick={() => isToday && setShowEditor(true)}
+                                    disabled={!isToday}
+                                    className={`px-4 py-2 rounded-lg shadow transition
+                                        ${
+                                            isToday
+                                                ? "bg-blue-500 text-white hover:bg-blue-600"
+                                                : "bg-gray-300 text-gray-600 cursor-not-allowed"
+                                        }`
+                                    }
+                                >
+                                    ✍️ 일기 작성하기
+                                </button>
+
+                                {/* 안내 문구 (오늘 날짜가 아닐 때만 표시) */}
+                                {!isToday && (
+                                    <div
+                                        className="absolute -top-5 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs 
+                                                rounded px-2 py-1 opacity-0 group-hover:opacity-100
+                                                transition-opacity duration-300 whitespace-nowrap z-10"
+                                    >
+                                        오늘 날짜의 일기만 작성이 가능합니다
+                                    </div>
+                                )}
+                            </div>
                         </>
                     ) : (
                         <DiaryEditor />
