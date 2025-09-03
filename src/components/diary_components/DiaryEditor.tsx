@@ -50,7 +50,7 @@ const DiaryEditor: React.FC<DiaryEditorProps> = ({ setAiResult }) => {
                 moodColor: moodColor || null,
             };
 
-            const diaryRes = await axiosInstance.post("http://localhost:8080/api/diary", diaryPayload);
+            const diaryRes = await axiosInstance.post("/diary", diaryPayload);
             const savedDiaryId = diaryRes.data.diaryId; // 서버에서 반환한 diaryId
 
             // 2️⃣ 그림 저장 (있으면)
@@ -61,7 +61,7 @@ const DiaryEditor: React.FC<DiaryEditorProps> = ({ setAiResult }) => {
                 formData.append("file", blob, "doodle.png");
                 formData.append("diaryId", savedDiaryId.toString()); // 다이어리 ID 매칭
 
-                await axiosInstance.post("http://localhost:8080/api/doodles", formData, {
+                await axiosInstance.post("/doodles", formData, {
                     headers: { "Content-Type": "multipart/form-data" },
                 });
             }
