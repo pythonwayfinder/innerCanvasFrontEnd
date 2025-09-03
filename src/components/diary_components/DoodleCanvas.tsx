@@ -3,10 +3,11 @@ import { ReactSketchCanvas, type ReactSketchCanvasRef } from "react-sketch-canva
 
 interface DoodleCanvasProps {
     doodleId?: number;
+    editable?: boolean;
 }
 
 const DoodleCanvas = forwardRef<ReactSketchCanvasRef, DoodleCanvasProps>(
-    ({ doodleId }, ref) => {
+    ({ doodleId, editable }, ref) => {
         const [color, setColor] = useState("#000000");
         const [strokeWidth, setStrokeWidth] = useState(3);
         const [isEraser, setIsEraser] = useState(false);
@@ -88,6 +89,7 @@ const DoodleCanvas = forwardRef<ReactSketchCanvasRef, DoodleCanvasProps>(
                     strokeWidth={strokeWidth}
                     strokeColor={color}
                     style={{ border: "1px solid #ccc", borderRadius: "8px" }}
+                    allowOnlyPointerType={!editable ? "none" : "all"}
                 />
 
                 {/* 연결된 DoodleId */}
