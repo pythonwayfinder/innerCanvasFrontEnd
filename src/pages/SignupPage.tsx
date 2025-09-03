@@ -79,7 +79,7 @@ const SignupPage = () => {
                     <div className="flex flex-col items-center pt-4">
                         <button
                             type="submit" disabled={loading}
-                            className="w-full bg-[#7BAA89] hover:bg-[#699677] text-white font-bold py-3 px-4 rounded-md focus:outline-none focus:shadow-outline disabled:bg-[#DAD3CA] transition-all duration-300"
+                            className="w-full bg-[#639473] hover:bg-[#527A60] text-white font-bold py-3 px-4 rounded-md focus:outline-none focus:shadow-outline disabled:bg-[#DAD3CA] transition-all duration-300"
                         >
                             {loading ? '처리 중...' : '가입 완료'}
                         </button>
