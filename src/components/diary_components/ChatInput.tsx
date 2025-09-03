@@ -12,6 +12,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ diaryId, onMessageSent, aiResult 
     const [loading, setLoading] = useState(false);
 
     const handleSend = async () => {
+
         if (diaryId == -1) {
             if (!input.trim()) return;
 

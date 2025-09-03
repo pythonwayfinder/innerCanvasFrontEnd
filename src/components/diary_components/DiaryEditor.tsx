@@ -81,10 +81,10 @@ const DiaryEditor: React.FC<DiaryEditorProps> = ({ setAiResult }) => {
     };
 
     const handleAiConsult = async () => {
-        if (!isAuthenticated) {
-            alert('로그인 중이 아닙니다');
-            return;
-        }
+        // if (!isAuthenticated) {
+        //     alert('로그인 중이 아닙니다');
+        //     return;
+        // }
 
         setLoadingAi(true);
         setMessage("");
@@ -92,20 +92,20 @@ const DiaryEditor: React.FC<DiaryEditorProps> = ({ setAiResult }) => {
         try {
             const dataUrl = await canvasRef.current?.exportImage("png");
             const formData = new FormData();
-            formData.append("username", username);
+            // formData.append("username", username);
             formData.append("diaryText", diaryText);
-            formData.append("moodColor", moodColor || "");
+            // formData.append("moodColor", moodColor || "");
             if (dataUrl) {
                 const blob = await (await fetch(dataUrl)).blob();
                 formData.append("file", blob, "doodle.png");
             }
 
             // 스프링 통합 엔드포인트 호출
-            const res = await axiosInstance.post("/diary-with-doodle", formData, {
+            const res = await axiosInstance.post("/analysis/ai", formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
 
-            const aiText = res.data; // FastAPI에서 받은 분석 결과
+            const aiText = res.data.counselingText; // FastAPI에서 받은 분석 결과
             console.log(aiText);
             setAiResult(aiText);
             setMessage("💡 AI 상담 완료!");
