@@ -6,65 +6,50 @@ import useMyInquiries from '../../hooks/useMyInquiries';
 export default function MyInquiry() {
     const [showForm, setShowForm] = useState(false);
     const [selectedInquiryId, setSelectedInquiryId] = useState<string | null>(null);
-    const { refetch } = useMyInquiries(); // ✅ 새로고침 함수 가져옴
+    const { refetch } = useMyInquiries();
 
     const handleFormSuccess = () => {
         setShowForm(false);
         setSelectedInquiryId(null);
-        refetch(); // 문의 등록 후 목록 갱신
-    };
-
-    const handleBackToList = () => {
-        setSelectedInquiryId(null);
+        refetch();
     };
 
     return (
-        <div className="flex flex-col gap-6 p-6 bg-white shadow rounded-lg w-full">
-            <h1 className="text-2xl font-bold text-gray-800">문의하기 💬</h1>
+        // --- 수정된 부분 1: 전체 컨테이너 스타일 ---
+        <div className="flex flex-col gap-6 p-6 bg-white shadow-md rounded-lg w-full">
+            {/* --- 수정된 부분 2: 제목 스타일 --- */}
+            <h1 className="text-2xl font-bold text-[#4D4F94]">QnA 💬</h1>
 
             {showForm ? (
-                <>
-                    <InquiryForm onSuccess={handleFormSuccess} />
-                    {/*<div className="flex justify-end mt-4 gap-2">*/}
-                    {/*    <button*/}
-                    {/*        onClick={() => setShowForm(false)}*/}
-                    {/*        className="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600"*/}
-                    {/*    >*/}
-                    {/*        목록으로 돌아가기*/}
-                    {/*    </button>*/}
-                    {/*</div>*/}
-                </>
+                // 문의 작성 폼 뷰
+                <InquiryForm onSuccess={handleFormSuccess} />
             ) : selectedInquiryId ? (
+                // 문의 상세 보기 뷰
                 <>
                     <InquiryList
                         selectedInquiryId={selectedInquiryId}
                         onSelectInquiry={setSelectedInquiryId}
                     />
-                    <div className="flex justify-end mt-4 gap-2">
-                        <button
-                            onClick={handleBackToList}
-                            className="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600"
-                        >
-                            목록으로 돌아가기
-                        </button>
-                    </div>
                 </>
             ) : (
+                // 문의 목록 뷰
                 <>
                     <InquiryList
                         selectedInquiryId={null}
                         onSelectInquiry={setSelectedInquiryId}
                     />
-                    <div className="flex justify-end mt-4 gap-2">
+                    <div className="flex justify-end mt-4 gap-3">
+                        {/* --- 수정된 부분 4: '새로고침' 버튼 스타일 --- */}
                         <button
                             onClick={refetch}
-                            className="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600"
+                            className="px-5 py-2.5 bg-slate-200 text-slate-700 rounded-lg hover:bg-slate-300 transition font-semibold"
                         >
                             새로고침
                         </button>
+                        {/* --- 수정된 부분 5: '문의하기' 버튼 스타일 --- */}
                         <button
                             onClick={() => setShowForm(true)}
-                            className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+                            className="px-5 py-2.5 bg-[#7286D3] text-white rounded-lg shadow-sm hover:bg-[#5B6CA8] transition font-semibold"
                         >
                             문의하기
                         </button>

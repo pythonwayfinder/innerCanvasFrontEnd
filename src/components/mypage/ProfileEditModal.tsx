@@ -149,7 +149,7 @@ const ProfileEditModal = ({ user, onClose, onProfileSave, onPasswordSave }: Prof
                     </div>
 
                     <div className="flex flex-col gap-3 pt-6">
-                        <button type="submit" disabled={saving} className="w-full bg-[#7BAA89] hover:bg-[#699677] text-white font-bold py-3 px-4 rounded-md focus:outline-none focus:shadow-outline disabled:bg-slate-300 transition-all duration-300">
+                        <button type="submit" disabled={saving} className="w-full bg-[#639473] hover:bg-[#527A60] text-white font-bold py-3 px-4 rounded-md focus:outline-none focus:shadow-outline disabled:bg-slate-300 transition-all duration-300">
                             {saving ? '저장 중…' : '변경사항 저장'}
                         </button>
                         <button type="button" onClick={onClose} className="w-full bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-3 px-4 rounded-md transition-colors">

@@ -13,6 +13,7 @@ import MyPage from "./pages/MyPage.tsx";
 import MainPage from "./pages/MainPage.tsx";
 import DiaryPage from "./pages/DiaryPage.tsx";
 import MoodCalendarPage from "./pages/MoodCalendarPage.tsx";
+import AdminPage from "./pages/AdminPage.tsx";
 
 // 임시 컴포넌트들 (실제 페이지로 교체될 예정)
 const MyPageContent = () => <div className="p-8"><h2>마이 페이지 내용</h2><p>여기는 로그인한 사용자만 볼 수 있는 마이 페이지입니다.</p></div>;
@@ -69,6 +70,7 @@ function App() {
                 <Route element={<PrivateRoutes />}>
                     <Route path="/mypage" element={<MyPage />} /> {/* MyPage는 PrivateRoutes 안에 있어야 함 */}
                     <Route path="/dashboard" element={<MyPageContent />} /> {/* 예시로 추가 */}
+                    <Route path="/adminpage" element={<AdminPage />} />
                 </Route>
 
                 {/* 존재하지 않는 경로 처리 */}

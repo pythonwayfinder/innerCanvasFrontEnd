@@ -49,7 +49,7 @@ const DiaryViewer: React.FC<DiaryViewerProps> = ({ diaryData, type }) => {
             <p className="text-sm text-gray-500 mb-2">날짜: {diary?.createdAt}
                 <button
                     className="ml-2 px-1 py-1 bg-green-500 text-white rounded-lg shadow hover:bg-green-600"
-                    onClick={() => navigate('/calendar')}>
+                    onClick={() => navigate('/mypage')}>
                     달력으로
                 </button>
             </p>
