@@ -8,7 +8,7 @@ import { updateMe, changePassword } from '../api/userApi';
 // 외부 컴포넌트 (기존 그대로 사용)
 import ProfileEditModal from '../components/mypage/ProfileEditModal';
 import Calendar from '../components/calendar/Calendar';
-import MyInquiry from '../components/Inquiry/MyInquiry';
+import MyInquiry from '../components/inquiry/MyInquiry';
 
 // ==============================
 // 타입: 프론트에서는 birthDate 로 통일
