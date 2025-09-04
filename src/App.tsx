@@ -15,6 +15,7 @@ import DiaryPage from "./pages/DiaryPage.tsx";
 import MoodCalendarPage from "./pages/MoodCalendarPage.tsx";
 import AdminPage from "./pages/AdminPage.tsx";
 
+
 // 임시 컴포넌트들 (실제 페이지로 교체될 예정)
 const MyPageContent = () => <div className="p-8"><h2>마이 페이지 내용</h2><p>여기는 로그인한 사용자만 볼 수 있는 마이 페이지입니다.</p></div>;
 const AboutPage = () => <div className="p-8"><h2>서비스 소개</h2><p>WayFinderAI 서비스에 오신 것을 환영합니다!</p></div>;
@@ -56,6 +57,7 @@ function App() {
             {/* 모든 페이지 상단에 Header를 고정 */}
             <Header />
             <Routes>
+
                 {/* 공개 라우트 */}
                 <Route path="/" element={<MainPage />} />
                 <Route path="/about" element={<AboutPage />} />
