@@ -10,7 +10,7 @@ interface AnalysisResult {
     diaryId: number;
     analysisText: string;
 }
-
+//11111
 interface DiaryEditorProps {
     // 이제 부모에게 'diaryId'와 'AI 분석 결과'를 함께 전달합니다.
     onAnalysisComplete: (result: AnalysisResult) => void;

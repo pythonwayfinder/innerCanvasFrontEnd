@@ -11,7 +11,7 @@ interface Diary {
     moodColor?: string | null;
     createdAt: string | "";
 }
-
+//11111
 interface DiaryViewerProps {
     diaryData: Diary | null;
     type: number;

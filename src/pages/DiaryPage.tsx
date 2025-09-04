@@ -22,7 +22,7 @@ export interface ChatMessage {
     sender: "user" | "ai";
     message: string;
 }
-
+//11111
 interface DiaryViewerProps {
     diaryData: Diary | null;
     type: number;
