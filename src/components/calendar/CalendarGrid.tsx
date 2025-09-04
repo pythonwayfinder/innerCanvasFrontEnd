@@ -1,12 +1,10 @@
-// src/components/calendar_components/CalendarGrid.tsx
-
 import React from 'react';
 import CalendarDay from './CalendarDay';
-import { getKoreanDateString } from '../../utils/dateUtils'; // ✅ 한국 시간 변환 함수 import
+import { getKoreanDateString } from '../../utils/dateUtils';
 
 interface Props {
     date: Date;
-    moodData: Record<string, 'happy' | 'sad' | 'angry' | 'neutral'>;
+    moodData: Record<string, '분노' | '기쁨' | '상처' | '불안' | '당황' | '슬픔'>;
     onDateClick: (date: Date) => void;
 }
 
@@ -17,11 +15,9 @@ const CalendarGrid: React.FC<Props> = ({ date, moodData, onDateClick }) => {
     const month = date.getMonth();
 
     const today = new Date();
-    const todayStr = getKoreanDateString(today); // ✅ 한국 기준 오늘 날짜
+    const todayStr = getKoreanDateString(today);
 
-    // 1일이 시작하는 요일 (일:0 ~ 토:6)
     const firstDay = new Date(year, month, 1).getDay();
-
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const totalCells = firstDay + daysInMonth;
     const totalRows = Math.ceil(totalCells / 7);
@@ -51,11 +47,10 @@ const CalendarGrid: React.FC<Props> = ({ date, moodData, onDateClick }) => {
                     }
 
                     const currentDate = new Date(year, month, day);
-                    const dateStr = getKoreanDateString(currentDate); // ✅ 한국 기준 날짜 문자열
+                    const dateStr = getKoreanDateString(currentDate);
                     const mood = moodData[dateStr] || null;
 
                     const dayOfWeek = idx % 7;
-
                     const isSunday = dayOfWeek === 0;
                     const isSaturday = dayOfWeek === 6;
 
@@ -63,8 +58,7 @@ const CalendarGrid: React.FC<Props> = ({ date, moodData, onDateClick }) => {
                     if (isSunday) weekendTextClass = 'text-red-500';
                     else if (isSaturday) weekendTextClass = 'text-blue-500';
 
-                    const isToday = dateStr === todayStr; // ✅ 한국 기준 오늘과 비교
-
+                    const isToday = dateStr === todayStr;
                     const todayBorderClass = isToday
                         ? 'border-2 border-[#a7b4e0]'
                         : 'border border-gray-300';

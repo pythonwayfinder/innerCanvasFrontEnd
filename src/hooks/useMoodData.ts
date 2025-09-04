@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import axiosInstance from '../api/axiosInstance';
-import { getKoreanDateString } from '../utils/dateUtils'; // ✅ 추가
+import { getKoreanDateString } from '../utils/dateUtils';
 
-type Mood = 'happy' | 'sad' | 'angry' | 'neutral';
+type Mood = '분노' | '기쁨' | '상처' | '불안' | '당황' | '슬픔';
 type MoodData = Record<string, Mood>;
 
 export const useMoodData = (year: number, month: number) => {
@@ -17,11 +17,10 @@ export const useMoodData = (year: number, month: number) => {
                 const res = await axiosInstance.get(`/mood/${year}/${month}`);
 
                 const moodObj: MoodData = {};
-
-                res.data.forEach((item: { date: string; month: Mood }) => {
-                    const dateObj = new Date(item.date); // ISO 문자열 → Date 객체
-                    const koreanDateStr = getKoreanDateString(dateObj); // ✅ 한국 기준 변환
-                    moodObj[koreanDateStr] = item.month;
+                res.data.forEach((item: { date: string; moodColor: Mood }) => {
+                    const dateObj = new Date(item.date);
+                    const koreanDateStr = getKoreanDateString(dateObj);
+                    moodObj[koreanDateStr] = item.moodColor;
                 });
 
                 setMoodData(moodObj);

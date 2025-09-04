@@ -1,10 +1,12 @@
 import React from 'react';
 
 const moods = [
-    { mood: 'happy', color: 'bg-yellow-200' },
-    { mood: 'sad', color: 'bg-blue-200' },
-    { mood: 'angry', color: 'bg-red-200' },
-    { mood: 'neutral', color: 'bg-gray-200' }
+    { mood: '분노', color: 'bg-red-200' },
+    { mood: '기쁨', color: 'bg-yellow-200' },
+    { mood: '상처', color: 'bg-purple-200' },
+    { mood: '불안', color: 'bg-blue-200' },
+    { mood: '당황', color: 'bg-pink-200' },
+    { mood: '슬픔', color: 'bg-gray-300' }
 ];
 
 const MoodLegend: React.FC = () => {
@@ -13,7 +15,7 @@ const MoodLegend: React.FC = () => {
             {moods.map(({ mood, color }) => (
                 <div key={mood} className="flex items-center space-x-2">
                     <span className={`w-6 h-6 rounded-full ${color} border border-gray-400`} />
-                    <span className="capitalize text-[#3b3b58] font-medium">{mood}</span>
+                    <span className="text-[#3b3b58] font-medium">{mood}</span>
                 </div>
             ))}
         </div>
