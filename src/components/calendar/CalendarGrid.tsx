@@ -1,5 +1,8 @@
+// src/components/calendar_components/CalendarGrid.tsx
+
 import React from 'react';
 import CalendarDay from './CalendarDay';
+import { getKoreanDateString } from '../../utils/dateUtils'; // ✅ 한국 시간 변환 함수 import
 
 interface Props {
     date: Date;
@@ -14,9 +17,7 @@ const CalendarGrid: React.FC<Props> = ({ date, moodData, onDateClick }) => {
     const month = date.getMonth();
 
     const today = new Date();
-    const todayYear = today.getFullYear();
-    const todayMonth = today.getMonth();
-    const todayDate = today.getDate();
+    const todayStr = getKoreanDateString(today); // ✅ 한국 기준 오늘 날짜
 
     // 1일이 시작하는 요일 (일:0 ~ 토:6)
     const firstDay = new Date(year, month, 1).getDay();
@@ -49,12 +50,12 @@ const CalendarGrid: React.FC<Props> = ({ date, moodData, onDateClick }) => {
                         return <div key={idx} className="h-32 bg-[#f1f3f5] rounded-md" />;
                     }
 
-                    const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                    const currentDate = new Date(year, month, day);
+                    const dateStr = getKoreanDateString(currentDate); // ✅ 한국 기준 날짜 문자열
                     const mood = moodData[dateStr] || null;
 
                     const dayOfWeek = idx % 7;
 
-                    // 🔵 주말 색상 처리
                     const isSunday = dayOfWeek === 0;
                     const isSaturday = dayOfWeek === 6;
 
@@ -62,10 +63,7 @@ const CalendarGrid: React.FC<Props> = ({ date, moodData, onDateClick }) => {
                     if (isSunday) weekendTextClass = 'text-red-500';
                     else if (isSaturday) weekendTextClass = 'text-blue-500';
 
-                    const isToday =
-                        year === todayYear &&
-                        month === todayMonth &&
-                        day === todayDate;
+                    const isToday = dateStr === todayStr; // ✅ 한국 기준 오늘과 비교
 
                     const todayBorderClass = isToday
                         ? 'border-2 border-[#a7b4e0]'
@@ -76,7 +74,7 @@ const CalendarGrid: React.FC<Props> = ({ date, moodData, onDateClick }) => {
                             key={idx}
                             day={day}
                             mood={mood}
-                            onClick={() => onDateClick(new Date(year, month, day))}
+                            onClick={() => onDateClick(currentDate)}
                             className={weekendTextClass}
                             className2={todayBorderClass}
                         />

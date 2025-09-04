@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import axiosInstance from "../../api/axiosInstance";
+import { useNavigate } from "react-router-dom";
 
 import DiaryEditor from "./DiaryEditor.tsx";
+import { getKoreanDateString } from "../../utils/dateUtils";
 
 interface Diary {
     diaryId: number;
@@ -23,32 +23,42 @@ const DiaryViewer: React.FC<DiaryViewerProps> = ({ diaryData, type, date, setAiR
     const [diary, setDiary] = useState<Diary | null>(diaryData);
     const [showEditor, setShowEditor] = useState(false);
     const navigate = useNavigate();
-    const today = new Date().toISOString().split("T")[0];
-    const isToday = (date ? date === today : true);
 
+    // 오늘 날짜를 한국 시간 기준으로 구함
+    const today = getKoreanDateString(new Date());
+
+    // date가 없으면 오늘 날짜 기준으로, 있으면 date 그대로 사용
+    const targetDate = date || today;
+
+    // 오늘 날짜인지 판단 (한국 시간 기준)
+    const isToday = targetDate === today;
+
+    // diaryData, type 변경 시 diary 상태 관리
     useEffect(() => {
-        if (type == 2 && !diaryData) {
+        if (type === 2 && !diaryData) {
             setDiary(diaryData);
-        }
-        else {
+        } else {
             setDiary(null);
             return;
         }
-    }, [diaryData, type])
+    }, [diaryData, type]);
+
 
     return (
         <div className="p-6 border border-gray-300 rounded-2xl shadow bg-white w-full h-full max-w-3xl mx-auto">
             {/* 제목 및 날짜 */}
             <h2 className="text-2xl font-bold mb-1 text-gray-800">📖 일기</h2>
-            <p className="text-sm text-gray-500 mb-2">날짜: {diary ? diary.createdAt : (date ? date : today)}
+            <p className="text-sm text-gray-500 mb-2">
+                날짜: {diary ? getKoreanDateString(new Date(diary.createdAt)) : targetDate}
                 <button
                     className="ml-2 px-1 py-1 bg-green-500 text-white rounded-lg shadow hover:bg-green-600"
-                    onClick={() => navigate('/mypage')}>
+                    onClick={() => navigate('/mypage')}
+                >
                     달력으로
                 </button>
             </p>
             {diary ? (
-                // 해당 날짜의 일기가 있을 경우 기분 띄우기 
+                // 해당 날짜의 일기가 있을 경우 기분 띄우기
                 <p className="text-sm text-gray-500 mb-4">
                     기분 색:{" "}
                     <span
@@ -59,10 +69,7 @@ const DiaryViewer: React.FC<DiaryViewerProps> = ({ diaryData, type, date, setAiR
                     </span>
                 </p>
             ) : (
-                // 해당 날짜 일기 없으면 패스
-                <div>
-
-                </div>
+                <div></div>
             )}
             <hr className="mb-4 border-gray-300" />
 
@@ -91,11 +98,10 @@ const DiaryViewer: React.FC<DiaryViewerProps> = ({ diaryData, type, date, setAiR
                                     disabled={!isToday}
                                     className={`px-4 py-2 rounded-lg shadow transition
                                         ${
-                                            isToday
-                                                ? "bg-blue-500 text-white hover:bg-blue-600"
-                                                : "bg-gray-300 text-gray-600 cursor-not-allowed"
-                                        }`
-                                    }
+                                        isToday
+                                            ? "bg-blue-500 text-white hover:bg-blue-600"
+                                            : "bg-gray-300 text-gray-600 cursor-not-allowed"
+                                    }`}
                                 >
                                     ✍️ 일기 작성하기
                                 </button>
@@ -103,7 +109,7 @@ const DiaryViewer: React.FC<DiaryViewerProps> = ({ diaryData, type, date, setAiR
                                 {/* 안내 문구 (오늘 날짜가 아닐 때만 표시) */}
                                 {!isToday && (
                                     <div
-                                        className="absolute -top-5 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs 
+                                        className="absolute -top-5 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs
                                                 rounded px-2 py-1 opacity-0 group-hover:opacity-100
                                                 transition-opacity duration-300 whitespace-nowrap z-10"
                                     >
@@ -113,12 +119,12 @@ const DiaryViewer: React.FC<DiaryViewerProps> = ({ diaryData, type, date, setAiR
                             </div>
                         </>
                     ) : (
-                        <DiaryEditor setAiResult={setAiResult}/>
+                        <DiaryEditor setAiResult={setAiResult} />
                     )}
                 </div>
             )}
         </div>
     );
-}
+};
 
 export default DiaryViewer;
