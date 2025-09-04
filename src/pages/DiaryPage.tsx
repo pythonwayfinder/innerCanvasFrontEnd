@@ -44,8 +44,8 @@ function DiaryPage() {
         if (isAuthenticated) {
             axiosInstance.get<Diary>("/diary", { params: { date: selectedDateStr } })
                 .then(res => {
-                    alert(res.data);
                     const loadedDiary = res.data;
+                    console.log(res.data);
                     if (loadedDiary && loadedDiary.diaryId) {
                         let initialMessages: ChatMessage[] = [];
 
@@ -91,16 +91,17 @@ function DiaryPage() {
             if (isAuthenticated) { // --- 회원 로직 ---
                 const diaryRes = await axiosInstance.post('/diary', { diaryText, moodColor, date: selectedDateStr });
                 const savedDiary: Diary = diaryRes.data;
-
+                console.log(diaryRes.data);
                 if (doodleFile) {
                     const doodleFormData = new FormData();
                     doodleFormData.append('file', doodleFile, 'doodle.png');
                     doodleFormData.append('diaryId', savedDiary.diaryId.toString());
-                    await axiosInstance.post('/doodles', doodleFormData);
+                    const doodleRes=await axiosInstance.post('/doodles', doodleFormData);
+                    savedDiary.doodleUrl = doodleRes.data.imageUrl;
                 }
 
                 const analysisFormData = new FormData();
-                analysisFormData.append('diaryId', savedDiary.diaryId());
+                analysisFormData.append('diaryId', savedDiary.diaryId.toString());
                 analysisFormData.append('diaryText', diaryText);
                 if (doodleFile) analysisFormData.append('file', doodleFile, 'doodle.png');
 
@@ -108,11 +109,14 @@ function DiaryPage() {
                 const analysisText = analysisRes.data.counselingText;
 
                 const finalDiaryData = { ...savedDiary, aiCounselingText: analysisText };
-                dispatch(setCurrentDiary(finalDiaryData));
-                dispatch(setMessages([{ sender: 'ai', message: analysisText }]));
+                dispatch(setCurrentDiary({
+                    diary: finalDiaryData,
+                    messages: [{ sender: 'ai', message: analysisText }]
+                }));
 
             } else { // --- 비회원 로직 ---
                 const analysisFormData = new FormData();
+                analysisFormData.append('diaryId', -1);
                 analysisFormData.append('diaryText', diaryText);
                 if (doodleFile) analysisFormData.append('file', doodleFile, 'doodle.png');
 
@@ -125,8 +129,10 @@ function DiaryPage() {
                     diaryText, moodColor, createdAt: new Date().toISOString(),
                     aiCounselingText: analysisText
                 };
-                dispatch(setCurrentDiary(tempDiary));
-                dispatch(setMessages([{ sender: 'ai', message: analysisText }]));
+                dispatch(setCurrentDiary({
+                    diary: tempDiary,
+                    messages: [{ sender: 'ai', message: analysisText }]
+                }));
             }
         } catch (err) { console.error(err); }
         finally { setIsLoading(false); }

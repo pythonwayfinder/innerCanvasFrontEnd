@@ -50,15 +50,15 @@ const DiaryDisplay: React.FC<DiaryDisplayProps> = ({ diary }) => {
                 </div>
             )}
 
-            {/* AI 최초 분석 결과가 있을 경우 표시 */}
-            {diary.aiCounselingText && (
-                <div className="mt-6">
-                    <div className="p-4 bg-[#E8EAF6] border border-[#A6B1E1] rounded-lg">
-                        <h3 className="font-bold text-[#4D4F94] mb-2">🤖 AI의 최초 분석</h3>
-                        <p className="text-gray-700 whitespace-pre-line">{diary.aiCounselingText}</p>
-                    </div>
-                </div>
-            )}
+            {/*/!* AI 최초 분석 결과가 있을 경우 표시 *!/*/}
+            {/*{diary.aiCounselingText && (*/}
+            {/*    <div className="mt-6">*/}
+            {/*        <div className="p-4 bg-[#E8EAF6] border border-[#A6B1E1] rounded-lg">*/}
+            {/*            <h3 className="font-bold text-[#4D4F94] mb-2">🤖 AI의 최초 분석</h3>*/}
+            {/*            <p className="text-gray-700 whitespace-pre-line">{diary.aiCounselingText}</p>*/}
+            {/*        </div>*/}
+            {/*    </div>*/}
+            {/*)}*/}
         </div>
     );
 };

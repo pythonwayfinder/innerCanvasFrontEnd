@@ -18,11 +18,13 @@ export interface ChatMessage {
 interface DiaryState {
     currentDiary: Diary | null;
     messages: ChatMessage[];
+    isAiResponding: boolean; // 👈 AI 응답 상태 추가
 }
 
 const initialState: DiaryState = {
     currentDiary: null,
     messages: [],
+    isAiResponding: false, // 👈 초기값 설정
 };
 
 // --- 여기가 핵심입니다: createAsyncThunk를 모두 제거했습니다. ---
@@ -44,13 +46,17 @@ const diarySlice = createSlice({
         addMessage: (state, action: PayloadAction<ChatMessage>) => {
             state.messages.push(action.payload);
         },
+        setIsAiResponding: (state, action: PayloadAction<boolean>) => {
+            state.isAiResponding = action.payload;
+        },
         // 페이지를 떠나거나 날짜가 바뀔 때 상태를 초기화합니다.
         resetDiaryState: (state) => {
             state.currentDiary = null;
             state.messages = [];
+            state.isAiResponding = false;
         },
     },
 });
 
-export const { setCurrentDiary, setMessages, addMessage, resetDiaryState } = diarySlice.actions;
+export const { setCurrentDiary, setMessages, addMessage, resetDiaryState, setIsAiResponding} = diarySlice.actions;
 export default diarySlice.reducer;
