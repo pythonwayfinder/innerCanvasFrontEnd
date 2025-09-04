@@ -1,126 +1,82 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState, useRef } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { type ReactSketchCanvasRef } from "react-sketch-canvas";
+import type { RootState, AppDispatch } from "../../store/store";
+import { setCurrentDiary, setMessages, fetchDiaryByDate } from "../../store/diarySlice";
+import axiosInstance from "../../api/axiosInstance";
 
-import DiaryEditor from "./DiaryEditor.tsx";
-import { getKoreanDateString } from "../../utils/dateUtils";
-// 홍민우
-interface Diary {
-    diaryId: number;
-    userId: number;
-    diaryText: string;
-    moodColor?: string | null;
-    createdAt: string | "";
-}
-//11111
+import DoodleCanvas from "./DoodleCanvas";
+import DiaryDisplay from "./DiaryDisplay"; // 일기 내용을 보여줄 순수 UI 컴포넌트
+
 interface DiaryViewerProps {
-    diaryData: Diary | null;
-    type: number;
-    date: string;
-    onAnalysisComplete: (result: { diaryId: number; analysisText: string }) => void;
+    selectedDate: Date;
 }
 
-const DiaryViewer: React.FC<DiaryViewerProps> = ({ diaryData, type, date, onAnalysisComplete }) => {
-    const [diary, setDiary] = useState<Diary | null>(diaryData);
-    const [showEditor, setShowEditor] = useState(false);
-    const navigate = useNavigate();
+const DiaryViewer: React.FC<DiaryViewerProps> = ({ selectedDate }) => {
+    const dispatch: AppDispatch = useDispatch();
+    const { currentDiary, status } = useSelector((state: RootState) => state.diary);
+    const { isAuthenticated } = useSelector((state: RootState) => state.auth);
 
-    // 오늘 날짜를 한국 시간 기준으로 구함
-    const today = getKoreanDateString(new Date());
+    // --- DiaryEditor의 상태와 로직을 이곳으로 통합 ---
+    const [diaryText, setDiaryText] = useState("");
+    const [moodColor, setMoodColor] = useState("#FFFFFF");
+    const [isLoading, setIsLoading] = useState(false);
+    const canvasRef = useRef<ReactSketchCanvasRef>(null);
 
-    // date가 없으면 오늘 날짜 기준으로, 있으면 date 그대로 사용
-    const targetDate = date || today;
-
-    // 오늘 날짜인지 판단 (한국 시간 기준)
-    const isToday = targetDate === today;
-
-    // diaryData, type 변경 시 diary 상태 관리
+    // 날짜가 바뀔 때마다 해당 날짜의 일기를 불러옵니다.
     useEffect(() => {
-        if (type === 2 && !diaryData) {
-            setDiary(diaryData);
-        } else {
-            setDiary(null);
-            return;
+        if(isAuthenticated) {
+            const dateStr = selectedDate.toISOString().split('T')[0];
+            dispatch(fetchDiaryByDate(dateStr));
         }
-    }, [diaryData, type]);
+    }, [selectedDate, isAuthenticated, dispatch]);
 
+    // "저장 및 AI 분석" 핸들러
+    const handleSaveAndConsult = async () => {
+        if (!diaryText.trim()) return;
+        setIsLoading(true);
+        try {
+            const diaryRes = await axiosInstance.post('/diary', { diaryText, moodColor });
+            const savedDiary = diaryRes.data;
+
+            const dataUrl = await canvasRef.current?.exportImage("png");
+            if (dataUrl) {
+                const blob = await (await fetch(dataUrl)).blob();
+                const doodleFormData = new FormData();
+                doodleFormData.append('file', blob, 'doodle.png');
+                doodleFormData.append('diaryId', savedDiary.diaryId.toString());
+                await axiosInstance.post('/doodles', doodleFormData);
+            }
+
+            const analysisFormData = new FormData();
+            analysisFormData.append('diaryText', diaryText);
+            if (dataUrl) { /* ... */ }
+            const analysisRes = await axiosInstance.post('/analysis/ai', analysisFormData);
+
+            const finalDiaryData = { ...savedDiary, aiCounselingText: analysisRes.data.counselingText };
+            dispatch(setCurrentDiary(finalDiaryData)); // Redux에 최종 일기 저장
+            dispatch(setMessages([{ sender: 'ai', message: analysisRes.data.counselingText }]));
+        } catch (err) { console.error(err); }
+        finally { setIsLoading(false); }
+    };
+
+    if (status === 'loading') return <div className="p-6 text-center">⏳ 일기를 불러오는 중...</div>;
 
     return (
-        <div className="p-6 border border-gray-300 rounded-2xl shadow bg-white w-full h-full max-w-3xl mx-auto">
-            {/* 제목 및 날짜 */}
-            <h2 className="text-2xl font-bold mb-1 text-gray-800">📖 일기</h2>
-            <p className="text-sm text-gray-500 mb-2">
-                날짜: {diary ? getKoreanDateString(new Date(diary.createdAt)) : targetDate}
-                <button
-                    className="ml-2 px-1 py-1 bg-green-500 text-white rounded-lg shadow hover:bg-green-600"
-                    onClick={() => navigate('/mypage')}
-                >
-                    달력으로
-                </button>
-            </p>
-            {diary ? (
-                // 해당 날짜의 일기가 있을 경우 기분 띄우기
-                <p className="text-sm text-gray-500 mb-4">
-                    기분 색:{" "}
-                    <span
-                        className="font-semibold"
-                        style={{ color: diary?.moodColor || "#000" }}
-                    >
-                        {diary?.moodColor || "없음"}
-                    </span>
-                </p>
+        <div className="p-6 border border-gray-200 rounded-2xl shadow-sm bg-white w-full">
+            {currentDiary ? (
+                // --- 일기가 있으면: DiaryDisplay 렌더링 ---
+                <DiaryDisplay diary={currentDiary} />
             ) : (
-                <div></div>
-            )}
-            <hr className="mb-4 border-gray-300" />
-
-            {/* 본문 */}
-            {diary ? (
-                <>
-                    <div className="space-y-4 text-gray-700 leading-relaxed whitespace-pre-line">
-                        {diary.diaryText}
-                    </div>
-
-                    {/* Doodle 정보 */}
-                    {/* {diary.doodleId && (
-                        <p className="mt-4 text-sm text-gray-500">
-                            관련 낙서 ID: {diary.doodleId}
-                        </p>
-                    )} */}
-                </>
-            ) : (
-                <div className="text-center text-gray-500">
-                    {!showEditor ? (
-                        <>
-                            <p className="mb-4">해당 날짜의 일기가 없습니다.</p>
-                            <div className="relative inline-block group">
-                                <button
-                                    onClick={() => isToday && setShowEditor(true)}
-                                    disabled={!isToday}
-                                    className={`px-4 py-2 rounded-lg shadow transition
-                                        ${
-                                        isToday
-                                            ? "bg-blue-500 text-white hover:bg-blue-600"
-                                            : "bg-gray-300 text-gray-600 cursor-not-allowed"
-                                    }`}
-                                >
-                                    ✍️ 일기 작성하기
-                                </button>
-
-                                {/* 안내 문구 (오늘 날짜가 아닐 때만 표시) */}
-                                {!isToday && (
-                                    <div
-                                        className="absolute -top-5 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs
-                                                rounded px-2 py-1 opacity-0 group-hover:opacity-100
-                                                transition-opacity duration-300 whitespace-nowrap z-10"
-                                    >
-                                        오늘 날짜의 일기만 작성이 가능합니다
-                                    </div>
-                                )}
-                            </div>
-                        </>
-                    ) : (
-                        <DiaryEditor onAnalysisComplete={onAnalysisComplete} />
-                    )}
+                // --- 일기가 없으면: DiaryEditor UI 렌더링 ---
+                <div>
+                    <h2 className="text-2xl font-bold mb-4 text-[#4D4F94]">✏️ {selectedDate.toISOString().split('T')[0]}의 새 일기</h2>
+                    <textarea value={diaryText} onChange={(e) => setDiaryText(e.target.value)} rows={8} className="w-full p-2 border rounded" placeholder="오늘의 이야기를 들려주세요..."/>
+                    <input type="color" value={moodColor} onChange={(e) => setMoodColor(e.target.value)} className="w-full h-10 mt-2" />
+                    <DoodleCanvas ref={canvasRef} />
+                    <button onClick={handleSaveAndConsult} disabled={isLoading} className="mt-4 w-full bg-[#7286D3] text-white p-3 rounded-lg font-semibold">
+                        {isLoading ? "처리 중..." : "저장 및 AI 분석"}
+                    </button>
                 </div>
             )}
         </div>
