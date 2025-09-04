@@ -1,25 +1,20 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../store/store"; // Redux 스토어의 RootState 타입을 import 합니다.
 
-// --- 수정된 부분 1: Props 타입을 훨씬 단순하게 변경합니다. ---
 interface ChatInputProps {
-    // 부모로부터 "메시지를 보내라"는 임무를 수행할 함수를 받습니다.
     onSendMessage: (message: string) => void;
-    // 부모로부터 AI가 응답 중인지(로딩 중인지) 상태를 받아옵니다.
-    disabled: boolean;
+    // disabled prop은 이제 Redux 스토어에서 직접 가져오므로 제거합니다.
 }
 
-const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, disabled }) => {
+const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
+    // --- FIX 1: Redux 스토어에서 AI 응답 상태를 직접 가져옵니다. ---
+    const { isAiResponding } = useSelector((state: RootState) => state.diary);
     const [input, setInput] = useState("");
 
-    // --- 수정된 부분 2: handleSend 함수를 하나의 통합된 로직으로 완전히 재작성합니다. ---
     const handleSend = () => {
-        // 입력값이 없으면 아무것도 하지 않습니다.
         if (!input.trim()) return;
-
-        // 이제 API를 직접 호출하지 않고, 부모에게 입력된 메시지를 전달하는 신호만 보냅니다.
         onSendMessage(input.trim());
-
-        // 메시지를 보낸 후 입력창을 깨끗하게 비웁니다.
         setInput("");
     };
 
@@ -31,21 +26,20 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, disabled }) => {
                 placeholder="AI에게 메시지를 보내보세요..."
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                // Enter 키를 눌렀을 때도 전송되도록 합니다.
                 onKeyDown={(e) => {
-                    if (e.key === "Enter" && !disabled) {
+                    // --- FIX 2: isAiResponding 상태를 직접 사용합니다. ---
+                    if (e.key === "Enter" && !isAiResponding) {
                         handleSend();
                     }
                 }}
-                // --- 수정된 부분 3: 비활성화 여부를 부모의 상태에 따라 결정합니다. ---
-                disabled={disabled}
+                disabled={isAiResponding} // disabled 속성에 isAiResponding을 연결합니다.
             />
             <button
                 onClick={handleSend}
                 className="px-5 py-2.5 bg-[#7286D3] text-white rounded-lg shadow-sm hover:bg-[#5B6CA8] disabled:opacity-50 transition font-semibold"
-                disabled={disabled}
+                disabled={isAiResponding} // disabled 속성에 isAiResponding을 연결합니다.
             >
-                {disabled ? "..." : "전송"}
+                {isAiResponding ? "..." : "전송"}
             </button>
         </div>
     );
