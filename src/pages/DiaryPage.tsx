@@ -6,7 +6,7 @@ import { useLocation } from "react-router-dom";
 import axiosInstance from "../api/axiosInstance";
 import AIChat from "../components/diary_components/AIChat";
 import { getKoreanDateString } from "../utils/dateUtils"; // ✅ 추가
-
+// 홍민우
 interface Diary {
     diaryId: number;
     userId: number;
