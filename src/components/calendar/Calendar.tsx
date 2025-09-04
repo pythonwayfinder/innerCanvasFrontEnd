@@ -11,7 +11,15 @@ import MoodLegend from './MoodLegend';
 // 이 컴포넌트는 이제 순수한 "달력" 그 자체입니다.
 // 겉모습(배경, 그림자 등)은 이 컴포넌트를 사용하는 부모가 결정합니다.
 export default function Calendar() {
-    const [currentDate, setCurrentDate] = useState(new Date());
+    // 1. 오늘 날짜를 가져오되, 시간은 자정(00:00:00)으로 설정하는 함수를 만듭니다.
+    const getTodayAtMidnight = () => {
+        const today = new Date();
+        // 시, 분, 초, 밀리초를 모두 0으로 설정하여 '오늘'의 시작점으로 만듭니다.
+        today.setHours(0, 0, 0, 0);
+        return today;
+    };
+    // 2. 초기 상태를 시간 정보가 제거된 '오늘'이라는 날짜 자체로 정확하게 설정합니다.
+    const [currentDate, setCurrentDate] = useState(getTodayAtMidnight());
     const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
     const navigate = useNavigate();
 
