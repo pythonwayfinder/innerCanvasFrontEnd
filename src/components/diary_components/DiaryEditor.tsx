@@ -4,7 +4,7 @@ import axiosInstance from "../../api/axiosInstance.ts";
 import DoodleCanvas from "./DoodleCanvas.tsx";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../store/store.ts";
-
+// 홍민우
 interface DiaryInput {
     username: string;
     diaryText: string;

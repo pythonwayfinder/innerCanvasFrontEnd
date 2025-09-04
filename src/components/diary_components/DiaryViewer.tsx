@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import DiaryEditor from "./DiaryEditor.tsx";
 import { getKoreanDateString } from "../../utils/dateUtils";
-
+// 홍민우
 interface Diary {
     diaryId: number;
     userId: number;
