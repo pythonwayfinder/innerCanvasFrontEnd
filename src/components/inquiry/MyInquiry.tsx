@@ -18,7 +18,7 @@ export default function MyInquiry() {
         // --- 수정된 부분 1: 전체 컨테이너 스타일 ---
         <div className="flex flex-col gap-6 p-6 bg-white shadow-md rounded-lg w-full">
             {/* --- 수정된 부분 2: 제목 스타일 --- */}
-            <h1 className="text-2xl font-bold text-[#4D4F94]">QnA 💬</h1>
+            <h1 className="text-2xl font-bold text-[#4D4F94]">문의 💬</h1>
 
             {showForm ? (
                 // 문의 작성 폼 뷰

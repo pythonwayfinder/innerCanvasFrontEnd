@@ -16,15 +16,15 @@ interface DiaryViewerProps {
     diaryData: Diary | null;
     type: number;
     date: string;
-    setAiResult: (text: string) => void;
+    onAnalysisComplete: (result: { diaryId: number; analysisText: string }) => void;
 }
 
-const DiaryViewer: React.FC<DiaryViewerProps> = ({ diaryData, type, date, setAiResult }) => {
+const DiaryViewer: React.FC<DiaryViewerProps> = ({ diaryData, type, date, onAnalysisComplete }) => {
     const [diary, setDiary] = useState<Diary | null>(diaryData);
     const [showEditor, setShowEditor] = useState(false);
     const navigate = useNavigate();
     const today = new Date().toISOString().split("T")[0];
-    const isToday = (date ? date === today : true);
+    const isToday = (date ? date === today : true); date
 
     useEffect(() => {
         if (type == 2 && !diaryData) {
@@ -40,7 +40,7 @@ const DiaryViewer: React.FC<DiaryViewerProps> = ({ diaryData, type, date, setAiR
         <div className="p-6 border border-gray-300 rounded-2xl shadow bg-white w-full h-full max-w-3xl mx-auto">
             {/* 제목 및 날짜 */}
             <h2 className="text-2xl font-bold mb-1 text-gray-800">📖 일기</h2>
-            <p className="text-sm text-gray-500 mb-2">날짜: {diary ? diary.createdAt : (date ? date : today)}
+            <p className="text-sm text-gray-500 mb-2">날짜: {date ? date : today}
                 <button
                     className="ml-2 px-1 py-1 bg-green-500 text-white rounded-lg shadow hover:bg-green-600"
                     onClick={() => navigate('/mypage')}>
@@ -113,7 +113,7 @@ const DiaryViewer: React.FC<DiaryViewerProps> = ({ diaryData, type, date, setAiR
                             </div>
                         </>
                     ) : (
-                        <DiaryEditor setAiResult={setAiResult}/>
+                        <DiaryEditor onAnalysisComplete={onAnalysisComplete} />
                     )}
                 </div>
             )}

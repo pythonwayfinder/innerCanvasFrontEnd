@@ -49,13 +49,14 @@ const AIChat: React.FC<AIChatProps> = ({ diaryId, type, aiResult }) => {
 
             // 3. FastAPI 서버로 대화 기록과 새 메시지를 전송합니다.
             const res = await axiosInstance.post("/analysis/chat", {
+                diaryId: diaryId,
                 message: userInput,        // 사용자의 새로운 질문
                 pastMessages: conversationHistory // RAG를 위한 이전 대화 내용
             });
 
             // 4. AI의 답변을 받아 메시지 목록에 추가합니다.
-            if (res.data && res.data.message) {
-                const aiMessage: ChatMessage = { sender: 'ai', message: res.data.message };
+            if (res.data && res.data.counselingText) {
+                const aiMessage: ChatMessage = { sender: 'ai', message: res.data.counselingText };
                 setMessages(prev => [...prev, aiMessage]);
             } else {
                 throw new Error("AI 응답 형식이 올바르지 않습니다.");

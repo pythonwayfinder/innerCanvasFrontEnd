@@ -1,3 +1,5 @@
+import React from 'react';
+
 interface MessageBubbleProps {
     sender: "user" | "ai";
     message: string;
@@ -5,11 +7,17 @@ interface MessageBubbleProps {
 
 const MessageBubble: React.FC<MessageBubbleProps> = ({ sender, message }) => {
     const isUser = sender === "user";
+
     return (
-        <div className={`flex ${isUser ? "justify-end" : "justify-start"} mb-2`}>
+        // --- 수정된 부분: 전체적인 정렬과 간격을 조정합니다. ---
+        <div className={`flex w-full ${isUser ? "justify-end" : "justify-start"}`}>
             <div
-                className={`px-3 py-2 rounded-lg max-w-xs break-words ${isUser ? "bg-indigo-600 text-white" : "bg-gray-200 text-gray-800"
-                    }`}
+                // --- 수정된 부분: 'InnerCanvas' 테마에 맞는 색상과 둥근 모서리를 적용합니다. ---
+                className={`px-4 py-2 rounded-xl max-w-[80%] break-words shadow-sm ${
+                    isUser
+                        ? "bg-[#7286D3] text-white"  // 사용자 메시지 (테마 메인 색상)
+                        : "bg-[#E8EAF6] text-gray-800" // AI 메시지 (테마 배경색 계열)
+                }`}
             >
                 {message}
             </div>
