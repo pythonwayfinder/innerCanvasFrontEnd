@@ -23,7 +23,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
             <input
                 type="text"
                 className="flex-1 p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#A6B1E1] transition"
-                placeholder="AI에게 메시지를 보내보세요..."
+                placeholder="메시지 입력"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => {

@@ -33,13 +33,13 @@ const MainPage = () => {
                     />
                 </div>
 
-            {/*<section*/}
-            {/*    className="relative py-20 md:py-32 bg-cover bg-center bg-no-repeat"*/}
-            {/*    // 🔄 수정: 오버레이(linear-gradient) 부분을 삭제하고 배경 이미지만 남깁니다.*/}
-            {/*    style={{*/}
-            {/*        backgroundImage: `url('/images/hero-artwork.jpg')`*/}
-            {/*    }}*/}
-            {/*>*/}
+                {/*<section*/}
+                {/*    className="relative py-20 md:py-32 bg-cover bg-center bg-no-repeat"*/}
+                {/*    // 🔄 수정: 오버레이(linear-gradient) 부분을 삭제하고 배경 이미지만 남깁니다.*/}
+                {/*    style={{*/}
+                {/*        backgroundImage: `url('/images/hero-artwork.jpg')`*/}
+                {/*    }}*/}
+                {/*>*/}
                 {/* ❗️ 더 이상 별도의 오버레이 div가 필요 없으므로 삭제했습니다. */}
 
                 {/* 텍스트 컨텐츠는 z-index가 필요 없어졌지만, relative는 유지합니다. */}
@@ -128,22 +128,25 @@ const MainPage = () => {
                     </div>
                 </div>
             </section>
-
-            {/* 3. Final CTA Section */}
-            <section className="py-20">
-                <div className="container mx-auto px-6 text-center">
-                    <h2 className="text-3xl font-bold text-gray-800 mb-4">
-                        당신의 내면을 채울 준비가 되셨나요?
-                    </h2>
-                    <p className="text-slate-500 mb-8">
-                        Inner Canvas와 함께 매일을 소중하게 간직하세요.
-                    </p>
-                    <Link to="/signup"
-                          className="bg-[#6E9C7B] text-white font-bold py-3 px-8 rounded-full hover:bg-[#5A8366] transition-all duration-300 text-lg">
-                        회원가입
-                    </Link>
-                </div>
-            </section>
+            {!isAuthenticated ? (
+                <section className="py-20">
+                    <div className="container mx-auto px-6 text-center">
+                        <h2 className="text-3xl font-bold text-gray-800 mb-4">
+                            당신의 내면을 채울 준비가 되셨나요?
+                        </h2>
+                        <p className="text-slate-500 mb-8">
+                            Inner Canvas와 함께 매일을 소중하게 간직하세요.
+                        </p>
+                        <Link to="/signup"
+                              className="bg-[#6E9C7B] text-white font-bold py-3 px-8 rounded-full hover:bg-[#5A8366] transition-all duration-300 text-lg">
+                            회원가입 하러가기
+                        </Link>
+                    </div>
+                </section>
+            ) : (
+                <></>
+            )
+            }
         </div>
     );
 };

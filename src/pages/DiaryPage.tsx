@@ -185,7 +185,7 @@ function DiaryPage() {
                                     onChange={(e) => setDiaryText(e.target.value)}
                                     rows={8}
                                     className="w-full p-2 border rounded"
-                                    placeholder="오늘의 이야기를 들려주세요..."
+                                    placeholder="오늘의 일기를 적어주세요"
                                     disabled={!isToday}
                                 />
                                 <input

@@ -1,16 +1,17 @@
 import React from 'react';
 import CalendarDay from './CalendarDay';
-import { getKoreanDateString } from '../../utils/dateUtils';
+import {getKoreanDateString} from '../../utils/dateUtils';
 
 interface Props {
-    date: Date;
-    moodData: Record<string, '분노' | '기쁨' | '상처' | '불안' | '당황' | '슬픔'>;
-    onDateClick: (date: Date) => void;
+    date: Date,
+    moodData: Record<string, '분노' | '기쁨' | '상처' | '불안' | '당황' | '슬픔'>,
+    onDateClick: (date: Date) => void,
+    className?: string
 }
 
 const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
 
-const CalendarGrid: React.FC<Props> = ({ date, moodData, onDateClick }) => {
+const CalendarGrid: React.FC<Props> = ({date, moodData, onDateClick}) => {
     const year = date.getFullYear();
     const month = date.getMonth();
 
@@ -23,7 +24,7 @@ const CalendarGrid: React.FC<Props> = ({ date, moodData, onDateClick }) => {
     const totalRows = Math.ceil(totalCells / 7);
     const totalSlots = totalRows * 7;
 
-    const calendarCells = Array.from({ length: totalSlots }, (_, i) => {
+    const calendarCells = Array.from({length: totalSlots}, (_, i) => {
         const day = i - firstDay + 1;
         return day > 0 && day <= daysInMonth ? day : null;
     });
@@ -43,7 +44,7 @@ const CalendarGrid: React.FC<Props> = ({ date, moodData, onDateClick }) => {
             <div className="grid grid-cols-7 gap-2">
                 {calendarCells.map((day, idx) => {
                     if (!day) {
-                        return <div key={idx} className="h-32 bg-[#f1f3f5] rounded-md" />;
+                        return <div key={idx} className="h-32 bg-[#f1f3f5] rounded-md"/>;
                     }
 
                     const currentDate = new Date(year, month, day);

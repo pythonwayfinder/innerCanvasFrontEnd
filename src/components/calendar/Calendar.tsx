@@ -27,6 +27,7 @@ export default function Calendar() {
     const month = currentDate.getMonth() + 1;
 
     const { moodData, loading, error } = isAuthenticated
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         ? useMoodData(year, month)
         : { moodData: {}, loading: false, error: null };
 
@@ -40,7 +41,7 @@ export default function Calendar() {
 
     const handleDateClick = (date: Date) => {
         if (isAuthenticated) {
-            alert(`선택한 날짜: ${date.toDateString()}`);
+            // alert(`선택한 날짜: ${date.toDateString()}`);
             navigate('/diary', { state: {select_date: date}});
         } else {
             navigate('/login');
@@ -61,7 +62,7 @@ export default function Calendar() {
                 ) : error ? (
                     <p className="text-center text-red-500 mt-10">오류 발생: {error}</p>
                 ) : (
-                    <CalendarGrid date={currentDate} moodData={moodData} onDateClick={handleDateClick} className="h-full" />
+                    <CalendarGrid date={currentDate} moodData={moodData} onDateClick={handleDateClick}/>
                 )}
             </div>
             <div className="flex-shrink-0">

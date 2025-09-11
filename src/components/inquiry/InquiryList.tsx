@@ -38,12 +38,13 @@ export default function InquiryList({ selectedInquiryId, onSelectInquiry }: Inqu
     if (selectedInquiryId) {
         const inquiry = inquiries.find(i => i.id === selectedInquiryId);
         if (!inquiry) {
-            // ... (에러 메시지 UI는 동일)
+            return
         }
         return <InquiryDetail inquiry={inquiry} onBackToList={() => onSelectInquiry(null)} />;
     }
 
     // --- 수정된 부분 3: 문의 목록 UI 스타일 변경 ---
+
     return (
         <div className="space-y-3">
             {inquiries.map((inq) => (
@@ -54,7 +55,7 @@ export default function InquiryList({ selectedInquiryId, onSelectInquiry }: Inqu
                 >
                     <div className="flex justify-between items-start">
                         <h3 className="font-bold text-lg text-[#4D4F94]">{inq.title}</h3>
-                        <StatusBadge answer={inq.answer} />
+                        <StatusBadge answer={inq.answer ?? null} />
                     </div>
                     <p className="mt-1 text-sm text-gray-600 line-clamp-2">{inq.content}</p>
                 </div>
@@ -69,7 +70,7 @@ function InquiryDetail({ inquiry, onBackToList }: { inquiry: Inquiry, onBackToLi
         <div className="p-6 border border-gray-200 rounded-lg bg-white shadow-sm animate-fade-in">
             <div className="flex justify-between items-center mb-4">
                 <h2 className="font-bold text-xl text-[#4D4F94]">{inquiry.title}</h2>
-                <StatusBadge answer={inquiry.answer} />
+                <StatusBadge answer={inquiry.answer?? null} />
             </div>
 
             {/* 문의 내용 */}

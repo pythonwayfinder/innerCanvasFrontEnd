@@ -68,7 +68,7 @@ const AIChat: React.FC<AIChatProps> = ({ aiResult }) => {
             <div className="flex-grow flex flex-col gap-2 mb-4 p-2 h-96 overflow-y-auto border rounded bg-gray-50">
                 {messages.length === 0 && !isAiResponding ? (
                     <div className="flex-grow flex items-center justify-center text-gray-500">
-                        AI의 분석 결과를 기다리거나 메시지를 보내보세요.
+                        AI의 분석 후 대화를 시작할 수 있어요.
                     </div>
                 ) : (
                     messages.map((msg, index) => (

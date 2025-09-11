@@ -19,7 +19,7 @@ const DiaryDisplay: React.FC<DiaryDisplayProps> = ({ diary }) => {
                 <h2 className="text-2xl font-bold text-[#4D4F94]">📖 {formattedDate}의 일기</h2>
                 {diary.moodColor && (
                     <div className="flex items-center mt-2">
-                        <p className="text-sm font-semibold text-gray-600 mr-2">오늘의 기분 색:</p>
+                        <p className="text-sm font-semibold text-gray-600 mr-2">오늘의 기분은? </p>
                         <div
                             className="w-6 h-6 rounded-full border border-gray-300"
                             style={{ backgroundColor: diary.moodColor }}

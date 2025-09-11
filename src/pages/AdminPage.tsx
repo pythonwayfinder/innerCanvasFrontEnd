@@ -2,16 +2,21 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import type { AppDispatch, RootState } from '../store/store';
-import { updateProfile } from '../store/authSlice';
-import { updateMe, changePassword } from '../api/userApi';
+import {type User, updateProfile } from '../store/authSlice';
+import {type ChangePasswordPayload ,updateMe, changePassword } from '../api/userApi';
 
-// 관리자 페이지에서 사용할 새로운 컴포넌트들을 import 합니다.
 import ProfileEditModal from '../components/mypage/ProfileEditModal';
 import InquiryManagement from '../components/admin/InquiryManagement';
 import WebsiteAnalytics from '../components/admin/WebsiteAnalytics';
 
-// MyPage의 ProfileSection 컴포넌트를 재사용합니다.
-const ProfileSection = ({ user, onEditClick }: any) => {
+interface ProfileSectionProps {
+    user: User; // Redux에서 가져온 User 타입을 사용
+    onEditClick: () => void;
+}
+
+
+
+const ProfileSection = ({ user, onEditClick }: ProfileSectionProps) => {
     return (
         <div className="bg-white p-6 rounded-lg shadow-md w-full flex flex-col items-center text-center">
             <h2 className="text-2xl font-bold text-[#4D4F94] mb-6">{user.role}</h2>
@@ -30,32 +35,22 @@ const ProfileSection = ({ user, onEditClick }: any) => {
     );
 };
 
-// --- 관리자 페이지 메인 컴포넌트 ---
+
 export default function AdminPage() {
     const dispatch: AppDispatch = useDispatch();
     const navigate = useNavigate();
     const { isAuthenticated, user } = useSelector((s: RootState) => s.auth);
-
     const [isModalOpen, setIsModalOpen] = useState(false);
-    // --- 수정된 부분: 탭 상태를 'inquiry'와 'analytics'로 변경 ---
     const [activeTab, setActiveTab] = useState<'inquiry' | 'analytics'>('inquiry');
 
-    // ==============================
-    // 권한 확인 로직
-    // ==============================
 
-    // [2단계: 렌더링 완료 후 실행되는 리디렉션 로직]
-    // 컴포넌트가 화면에 그려진 뒤, 권한이 없는 사용자를 안전하게 다른 페이지로 이동시킵니다.
-    // React 규칙상 렌더링 중에는 navigate를 호출할 수 없으므로 useEffect 안에서 처리합니다.
     useEffect(() => {
         if (!isAuthenticated || user?.role !== 'ADMIN') {
             navigate('/', { replace: true });
         }
     }, [isAuthenticated, user, navigate]);
 
-    // [1단계: 렌더링 중 즉시 실행되는 보호 로직]
-    // 권한이 없으면 user 객체 접근으로 인한 에러나 UI 깜빡임을 방지하기 위해
-    // 컴포넌트의 렌더링 자체를 즉시 중단합니다.
+
     if (!isAuthenticated || user?.role !== 'ADMIN') {
         return null;
     }
@@ -75,18 +70,15 @@ export default function AdminPage() {
             setIsModalOpen(false);
         } catch (error) {
             console.error("관리자 프로필 저장 실패:", error);
-            // 여기에 사용자에게 에러를 알리는 UI 로직을 추가할 수 있습니다.
         }
     };
 
-    // --- 수정된 부분 3: 비밀번호 변경 로직도 동일하게 구현합니다. ---
-    const handlePasswordSave = async (passwordData: any) => {
+
+    const handlePasswordSave = async (passwordData: ChangePasswordPayload) => {
         try {
             await changePassword(passwordData);
-            // 성공 메시지 UI 로직 추가 가능
         } catch (error) {
             console.error("관리자 비밀번호 변경 실패:", error);
-            // 에러 메시지 UI 로직 추가 가능
         }
     };
 
