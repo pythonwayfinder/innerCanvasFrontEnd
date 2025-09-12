@@ -1,6 +1,12 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-// --- 타입 정의 (이전과 동일) ---
+// --- 타입 정의 ---
+export interface ChatDto {
+    sender: string;
+    message: string;
+    // 백엔드에서 오는 다른 필드가 있다면 여기에 추가할 수 있습니다.
+}
+
 export interface Diary {
     diaryId: number;
     diaryText: string;
@@ -8,7 +14,9 @@ export interface Diary {
     doodleUrl?: string;
     aiCounselingText?: string;
     createdAt: string;
+    chatDtos?: ChatDto[]; // ✅ 이 줄을 추가하세요.
 }
+
 
 export interface ChatMessage {
     sender: "user" | "ai";
@@ -18,28 +26,25 @@ export interface ChatMessage {
 interface DiaryState {
     currentDiary: Diary | null;
     messages: ChatMessage[];
-    isAiResponding: boolean; // 👈 AI 응답 상태 추가
+    isAiResponding: boolean;
+    tempGuestId: string | null; // ✅ [추가] 비회원 임시 ID 상태
 }
 
 const initialState: DiaryState = {
     currentDiary: null,
     messages: [],
-    isAiResponding: false, // 👈 초기값 설정
+    isAiResponding: false,
+    tempGuestId: null, // ✅ [추가] 초기값 null로 설정
 };
 
-// --- 여기가 핵심입니다: createAsyncThunk를 모두 제거했습니다. ---
 const diarySlice = createSlice({
     name: 'diary',
     initialState,
-    // 오직 단순한 동기적 상태 변경 로직만 남깁니다.
     reducers: {
-        // API 호출 성공 후, 컴포넌트가 이 액션을 호출하여 스토어를 업데이트합니다.
         setCurrentDiary(state, action: PayloadAction<{ diary: Diary | null; messages: ChatMessage[] }>) {
-            // payload에서 diary와 messages를 각각 꺼내 state에 할당합니다.
             state.currentDiary = action.payload.diary;
             state.messages = action.payload.messages;
         },
-        // 채팅 메시지가 추가될 때마다 호출됩니다.
         setMessages: (state, action: PayloadAction<ChatMessage[]>) => {
             state.messages = action.payload;
         },
@@ -49,14 +54,28 @@ const diarySlice = createSlice({
         setIsAiResponding: (state, action: PayloadAction<boolean>) => {
             state.isAiResponding = action.payload;
         },
+        // ✅ [추가] 비회원 임시 ID를 저장하는 리듀서
+        setTempGuestId: (state, action: PayloadAction<string>) => {
+            state.tempGuestId = action.payload;
+        },
         // 페이지를 떠나거나 날짜가 바뀔 때 상태를 초기화합니다.
         resetDiaryState: (state) => {
             state.currentDiary = null;
             state.messages = [];
             state.isAiResponding = false;
+            state.tempGuestId = null; // ✅ [추가] 임시 ID도 함께 초기화
         },
     },
 });
 
-export const { setCurrentDiary, setMessages, addMessage, resetDiaryState, setIsAiResponding} = diarySlice.actions;
+// ✅ [추가] 새로 만든 setTempGuestId 액션을 export 합니다.
+export const {
+    setCurrentDiary,
+    setMessages,
+    addMessage,
+    resetDiaryState,
+    setIsAiResponding,
+    setTempGuestId
+} = diarySlice.actions;
+
 export default diarySlice.reducer;
